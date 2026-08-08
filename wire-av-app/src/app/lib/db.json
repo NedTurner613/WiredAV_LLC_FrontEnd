@@ -1,0 +1,81 @@
+{
+  "$schema": "wire-av-app/node_modules/json-server/schema.json",
+  "login": [
+    { "token": "1112", "userid": 123 }
+  ],
+  
+  "admin": [
+    { "token": 1, "userId": 1 }
+  ],
+  
+  "personnel": [
+    { "personnelId": 1, "firstName": "Neil", "lastName": "Armstrong", "email": "Neil@yahoo.com", "role": "admin" },
+    { "personnelId": 2, "firstName": "Buzz", "lastName": "Lightyear", "email": "Buzz@yahoo.com", "role": "technician" },
+    { "personnelId": 3, "firstName": "Ride", "lastName": "Or-die", "email": "ride@yahoo.com", "role": "technician" }
+  ],
+
+  "clients": [
+    { "clientId": 1, "firstName": "John", "lastName": "Doe", "email": "John@yahoo.com", "phone": "123-456-7890"},
+    { "clientId": 2, "firstName": "Jane", "lastName": "Smith", "email": "Jane@yahoo.com", "phone": "098-765-4321"},
+    { "clientId": 3, "firstName": "Alice", "lastName": "Johnson", "email": "Alice@yahoo.com", "phone": "555-123-4567"}
+  ],
+
+  "timeslots": [
+    { "startTime": "2026-10-08T16:00:00", "endTime": "2026-10-08T17:00:00" },
+    { "startTime": "2026-10-09T12:00:00", "endTime": "2026-10-09T13:00:00" },
+    { "startTime": "2026-10-10T10:00:00", "endTime": "2026-10-10T11:00:00" },
+    { "startTime": "2026-10-08T16:00:00", "endTime": "2026-10-08T17:00:00" },
+    { "startTime": "2026-10-08T17:00:00", "endTime": "2026-10-08T18:00:00" }
+    ],
+
+  "consult": [
+    {
+      "apptId": 1,
+      "status": "scheduled",
+      "personnelInfo": {
+        "personnelId": 1,
+        "firstName": "Neil",
+        "lastName": "Armstrong"
+      },
+      "clientInfo": {
+        "clientId": 1,
+        "firstName": "John",
+        "lastName": "Doe",
+        "phoneNumber": "123-456-7890",
+        "email": "John@yahoo.com"
+      },
+      "timeslot": {
+        "timeslotId": 1,
+        "startTime": "2026-10-15T17:00:00",
+        "endTime": "2026-10-15T18:00:00"
+      },
+      "apptType": "consultation"
+    },
+    {
+      "apptId": 2,
+      "status": "scheduled",
+      "personnelInfo": {
+        "personnelId": 2,
+        "firstName": "Buzz",
+        "lastName": "Lightyear"
+      },
+      "clientInfo": {
+        "clientId": 2,
+        "firstName": "Jane",
+        "lastName": "Smith",
+        "phoneNumber": "098-765-4321",
+        "email": "Jane@yahoo.com"
+      },
+      "timeslot": {
+        "timeslotId": 2,
+        "startTime": "2026-10-12T17:00:00",
+        "endTime": "2026-10-12T18:00:00"
+      },
+      "apptType": "consultation"
+    }
+  ],
+
+  "profile": {
+    "name": "typicode"
+  }
+}
