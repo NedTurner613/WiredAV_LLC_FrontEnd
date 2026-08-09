@@ -77,12 +77,12 @@ export default function ContactPage() {
             </div>
             
             <h1 className="text-white text-4xl md:text-6xl lg:text-7xl font-semibold max-w-3xl leading-[1.1] mb-6">
-              Let&apos;s Design Your <br />
+              Let's Design Your <br />
               <span className="text-[#7FA5FF] italic">Seamless</span> Experience
             </h1>
             
             <p className="text-white/90 text-lg md:text-xl max-w-2xl leading-relaxed">
-              Whether you&apos;re looking for high-end home theater installation, smart home automation, or professional AV for your business, our experts are ready to assist.
+                            Whether you're looking for high-end home theater installation, smart home automation, or professional AV for your business, our experts are ready to assist.
             </p>
           </div>
         </section>
