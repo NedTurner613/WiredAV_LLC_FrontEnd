@@ -124,7 +124,7 @@ export default function AboutPage() {
               </div>
               <h3 className="text-2xl font-bold font-heading">Our Mission</h3>
               <p className="text-[#6E727A] italic leading-relaxed">
-                "To elevate human experiences through the masterful integration of audio, video, and automation technology, ensuring every interaction is seamless, reliable, and inspiring."
+                &quot;To elevate human experiences through the masterful integration of audio, video, and automation technology, ensuring every interaction is seamless, reliable, and inspiring.&quot;
               </p>
             </div>
           </div>
@@ -140,7 +140,7 @@ export default function AboutPage() {
               </div>
               <h3 className="text-2xl font-bold font-heading">Our Vision</h3>
               <p className="text-[#6E727A] italic leading-relaxed">
-                "To remain the premier authority in smart-space integration, pioneering new standards of technical excellence that transform how people live, work, and connect."
+                &quot;To remain the premier authority in smart-space integration, pioneering new standards of technical excellence that transform how people live, work, and connect.&quot;
               </p>
             </div>
           </div>
@@ -186,7 +186,7 @@ export default function AboutPage() {
         <div className="relative max-w-4xl mx-auto px-4 text-center text-white">
           <h2 className="text-3xl md:text-4xl font-medium font-heading mb-6">Driven by a Collective Passion</h2>
           <p className="text-lg md:text-xl text-[#E5E5E5] leading-relaxed mb-10">
-            Behind every seamless installation is a team of specialists collaborating to solve complex challenges. Our technicians aren't just installers—they are artisans of the digital age.
+            Behind every seamless installation is a team of specialists collaborating to solve complex challenges. Our technicians aren&apos;t just installers—they are artisans of the digital age.
           </p>
           <button className="px-10 py-3 bg-[#2563EB] text-[#F2F7FF] font-medium rounded-full shadow-xl hover:bg-[#1D4ED8] transition-all">
             Join Our Team
@@ -199,7 +199,7 @@ export default function AboutPage() {
         <div className="max-w-4xl mx-auto px-4 text-center">
           <h2 className="text-4xl md:text-5xl font-medium font-heading mb-6">Ready to Experience the Difference?</h2>
           <p className="text-lg text-[#6E727A] mb-10">
-            Whether you're planning a new build or upgrading an existing space, our experts are ready to bring your vision to life with technical precision and premium flair.
+            Whether you&apos;re planning a new build or upgrading an existing space, our experts are ready to bring your vision to life with technical precision and premium flair.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button className="w-full sm:w-auto px-12 py-3 bg-[#2563EB] text-[#F2F7FF] font-bold rounded-full shadow-lg hover:bg-[#1D4ED8] transition-all">
