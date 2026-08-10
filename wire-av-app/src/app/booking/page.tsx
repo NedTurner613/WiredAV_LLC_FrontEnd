@@ -1,4 +1,13 @@
+import { use } from "react";
+
 export default function BookingPage() {
+
+async function fetchTimeslots() {
+}
+
+async function fetchConsultationDetails() {
+}
+
   return (
     <div>
       <h1>Schedule a Consultation</h1>
@@ -8,6 +17,9 @@ export default function BookingPage() {
         officiis quae nihil earum esse illo. Nesciunt beatae incidunt aliquid
         tenetur?
       </p>
+
+
+
     </div>
   );
 }
