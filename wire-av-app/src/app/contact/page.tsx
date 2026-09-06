@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Icon } from '@iconify/react';
+import { ConsultationModal } from '@/components/consultation-modal';
 
 
 
@@ -30,9 +31,11 @@ export default function ContactPage() {
           </nav>
 
           <div className="hidden md:block">
-            <button className="bg-[#2563EB] text-white px-6 py-2.5 rounded-full text-sm font-semibold shadow-sm hover:bg-[#1D4ED8] transition-all">
-              Schedule a Consultation
-            </button>
+            <ConsultationModal>
+              <button className="bg-[#2563EB] text-white px-6 py-2.5 rounded-full text-sm font-semibold shadow-sm hover:bg-[#1D4ED8] transition-all">
+                Schedule a Consultation
+              </button>
+            </ConsultationModal>
           </div>
 
           {/* Mobile Menu Button */}
@@ -51,9 +54,11 @@ export default function ContactPage() {
             <Link href="/about" className="block text-base font-medium">About</Link>
             <Link href="/services" className="block text-base font-medium">Services</Link>
             <Link href="/contact" className="block text-base font-medium">Contact</Link>
-            <button className="w-full bg-[#2563EB] text-white px-6 py-3 rounded-full text-sm font-semibold">
-              Schedule a Consultation
-            </button>
+            <ConsultationModal>
+              <button className="w-full bg-[#2563EB] text-white px-6 py-3 rounded-full text-sm font-semibold">
+                Schedule a Consultation
+              </button>
+            </ConsultationModal>
           </div>
         )}
       </header>
