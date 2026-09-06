@@ -1,35 +1,36 @@
 {
   "$schema": "wire-av-app/node_modules/json-server/schema.json",
   "login": [
-    { "token": "1112", "userid": 123 }
+    { "id": 1, "token": "1112", "userid": 123 }
   ],
   
   "admin": [
-    { "token": 1, "userId": 1 }
+    { "id": 1, "token": 1 }
   ],
   
   "personnel": [
-    { "personnelId": 1, "firstName": "Neil", "lastName": "Armstrong", "email": "Neil@yahoo.com", "role": "admin" },
-    { "personnelId": 2, "firstName": "Buzz", "lastName": "Lightyear", "email": "Buzz@yahoo.com", "role": "technician" },
-    { "personnelId": 3, "firstName": "Ride", "lastName": "Or-die", "email": "ride@yahoo.com", "role": "technician" }
+    { "id": 1, "firstName": "Neil", "lastName": "Armstrong", "email": "Neil@yahoo.com", "role": "admin" },
+    { "id": 2, "firstName": "Buzz", "lastName": "Lightyear", "email": "Buzz@yahoo.com", "role": "technician" },
+    { "id": 3, "firstName": "Ride", "lastName": "Or-die", "email": "ride@yahoo.com", "role": "technician" }
   ],
 
   "clients": [
-    { "clientId": 1, "firstName": "John", "lastName": "Doe", "email": "John@yahoo.com", "phone": "123-456-7890"},
-    { "clientId": 2, "firstName": "Jane", "lastName": "Smith", "email": "Jane@yahoo.com", "phone": "098-765-4321"},
-    { "clientId": 3, "firstName": "Alice", "lastName": "Johnson", "email": "Alice@yahoo.com", "phone": "555-123-4567"}
+    { "id": 1, "firstName": "John", "lastName": "Doe", "email": "John@yahoo.com", "phone": "123-456-7890"},
+    { "id": 2, "firstName": "Jane", "lastName": "Smith", "email": "Jane@yahoo.com", "phone": "098-765-4321"},
+    { "id": 3, "firstName": "Alice", "lastName": "Johnson", "email": "Alice@yahoo.com", "phone": "555-123-4567"}
   ],
 
   "timeslots": [
-    { "startTime": "2026-10-08T16:00:00", "endTime": "2026-10-08T17:00:00" },
-    { "startTime": "2026-10-09T12:00:00", "endTime": "2026-10-09T13:00:00" },
-    { "startTime": "2026-10-10T10:00:00", "endTime": "2026-10-10T11:00:00" },
-    { "startTime": "2026-10-08T16:00:00", "endTime": "2026-10-08T17:00:00" },
-    { "startTime": "2026-10-08T17:00:00", "endTime": "2026-10-08T18:00:00" }
+    { "id": 1, "startTime": "2026-10-08T16:00:00", "endTime": "2026-10-08T17:00:00" },
+    { "id": 2, "startTime": "2026-10-09T12:00:00", "endTime": "2026-10-09T13:00:00" },
+    { "id": 3, "startTime": "2026-10-10T10:00:00", "endTime": "2026-10-10T11:00:00" },
+    { "id": 4, "startTime": "2026-10-08T16:00:00", "endTime": "2026-10-08T17:00:00" },
+    { "id": 5, "startTime": "2026-10-08T17:00:00", "endTime": "2026-10-08T18:00:00" }
     ],
 
   "consult": [
     {
+      "id": 1,
       "apptId": 1,
       "status": "requested",
       "personnelInfo": {
@@ -52,6 +53,7 @@
       "apptType": "consultation"
     },
     {
+      "id": 2,
       "apptId": 2,
       "status": "assigned",
       "personnelInfo": {
@@ -74,6 +76,7 @@
       "apptType": "consultation"
     },
     {
+      "id": 3,
       "apptId": 3,
       "status": "closed",
       "personnelInfo": {
