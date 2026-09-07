@@ -1,5 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
 import { apiClient } from "@/src/app/services/apiClient";
+
+/**
+ * A hook to fetch data from the API
+ * @param initialUrl The initial URL to fetch data from
+ * @returns The data from the API
+ */
 export function useApi<T>(initialUrl?: string) {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState<boolean>(Boolean(initialUrl));
@@ -29,6 +35,14 @@ export function useApi<T>(initialUrl?: string) {
     return () => clearTimeout(timeoutId);
   }, [fetchData]);
 
+  /**
+   * A hook to execute a mutation on the API
+   * @param action The action to execute
+   * @param url The URL to execute the mutation on
+   * @param body The body of the mutation
+   * @param autoRefetch Whether to refetch the data after the mutation
+   * @returns The result of the mutation
+   */
   const executeMutation = async <R, B>(
     action: (url: string, body?: B) => Promise<R>,
     url: string,
@@ -53,6 +67,11 @@ export function useApi<T>(initialUrl?: string) {
       setLoading(false);
     }
   };
+
+  /**
+   * The API client
+   * @returns The API client
+   */
   return {
     data,
     loading,
