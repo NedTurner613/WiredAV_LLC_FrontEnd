@@ -2,6 +2,7 @@
 
 import * as React from "react";
 
+import { cn } from "@/lib/utils";
 import { NavDocuments } from "@/components/nav-documents";
 import { NavMain } from "@/components/nav-main";
 import { NavSecondary } from "@/components/nav-secondary";
@@ -61,7 +62,7 @@ const data = {
     },
     {
       title: "Team",
-      url: "#",
+      url: "admin/dashboard/personnel",
       icon: <UsersIcon />,
     },
   ],
@@ -148,9 +149,19 @@ const data = {
     },
   ],
 };
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({
+  className,
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar collapsible="offcanvas" {...props}>
+    <Sidebar
+      collapsible="offcanvas"
+      className={cn(
+        "[&_[data-sidebar=menu-button]]:transition-all [&_[data-sidebar=menu-button]]:duration-200 [&_[data-sidebar=menu-button]]:ease-out [&_[data-sidebar=menu-button]:hover]:translate-x-1 [&_[data-sidebar=menu-button]:hover]:shadow-sm",
+        className,
+      )}
+      {...props}
+    >
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
