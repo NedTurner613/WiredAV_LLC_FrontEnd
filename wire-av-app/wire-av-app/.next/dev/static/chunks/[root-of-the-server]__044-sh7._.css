@@ -80,7 +80,6 @@
       --tw-skew-y: initial;
       --tw-space-y-reverse: 0;
       --tw-space-x-reverse: 0;
-      --tw-divide-y-reverse: 0;
       --tw-border-style: solid;
       --tw-gradient-position: initial;
       --tw-gradient-from: #0000;
@@ -177,9 +176,6 @@
       "Segoe UI Symbol", "Noto Color Emoji";
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
-    --color-red-500: #fb2c36;
-    --color-green-400: #05df72;
-    --color-green-500: #00c758;
     --color-cyan-200: #a2f4fd;
     --color-cyan-400: #00d2ef;
     --color-cyan-500: #00b7d7;
@@ -266,9 +262,6 @@
 
   @supports (color: lab(0% 0 0)) {
     :root, :host {
-      --color-red-500: lab(55.4814% 75.0732 48.8528);
-      --color-green-400: lab(78.503% -64.9265 39.7492);
-      --color-green-500: lab(70.5521% -66.5147 45.8073);
       --color-cyan-200: lab(91.0821% -24.0435 -12.8306);
       --color-cyan-400: lab(76.6045% -40.9406 -29.6231);
       --color-cyan-500: lab(67.805% -35.3952 -30.2018);
@@ -640,10 +633,6 @@
     top: calc(var(--spacing) * 4);
   }
 
-  .top-6 {
-    top: calc(var(--spacing) * 6);
-  }
-
   .top-8 {
     top: calc(var(--spacing) * 8);
   }
@@ -956,10 +945,6 @@
     display: block;
   }
 
-  .contents {
-    display: contents;
-  }
-
   .flex {
     display: flex;
   }
@@ -1232,14 +1217,6 @@
     max-height: 90vh;
   }
 
-  .max-h-\[400px\] {
-    max-height: 400px;
-  }
-
-  .max-h-\[600px\] {
-    max-height: 600px;
-  }
-
   .min-h-0 {
     min-height: 0;
   }
@@ -1334,10 +1311,6 @@
 
   .w-32 {
     width: calc(var(--spacing) * 32);
-  }
-
-  .w-38 {
-    width: calc(var(--spacing) * 38);
   }
 
   .w-40 {
@@ -1703,14 +1676,6 @@
     --tw-space-x-reverse: 0;
     margin-inline-start: calc(calc(var(--spacing) * -2) * var(--tw-space-x-reverse));
     margin-inline-end: calc(calc(var(--spacing) * -2) * calc(1 - var(--tw-space-x-reverse)));
-  }
-
-  :where(.divide-y > :not(:last-child)) {
-    --tw-divide-y-reverse: 0;
-    border-bottom-style: var(--tw-border-style);
-    border-top-style: var(--tw-border-style);
-    border-top-width: calc(1px * var(--tw-divide-y-reverse));
-    border-bottom-width: calc(1px * calc(1 - var(--tw-divide-y-reverse)));
   }
 
   .self-center {
@@ -2146,6 +2111,20 @@
     background-image: linear-gradient(var(--tw-gradient-stops));
   }
 
+  .bg-linear-to-r {
+    --tw-gradient-position: to right;
+  }
+
+  @supports (background-image: linear-gradient(in lab, red, red)) {
+    .bg-linear-to-r {
+      --tw-gradient-position: to right in oklab;
+    }
+  }
+
+  .bg-linear-to-r {
+    background-image: linear-gradient(var(--tw-gradient-stops));
+  }
+
   .bg-gradient-to-b {
     --tw-gradient-position: to bottom in oklab;
     background-image: linear-gradient(var(--tw-gradient-stops));
@@ -2248,10 +2227,6 @@
 
   .bg-clip-padding {
     background-clip: padding-box;
-  }
-
-  .fill-green-500 {
-    fill: var(--color-green-500);
   }
 
   .fill-none {
@@ -2506,10 +2481,6 @@
     text-align: left;
   }
 
-  .text-right {
-    text-align: right;
-  }
-
   .align-middle {
     vertical-align: middle;
   }
@@ -2747,10 +2718,6 @@
 
   .text-cyan-400 {
     color: var(--color-cyan-400);
-  }
-
-  .text-red-500 {
-    color: var(--color-red-500);
   }
 
   .text-sky-800 {
@@ -3817,11 +3784,6 @@
     z-index: 10;
   }
 
-  .focus-visible\:border:focus-visible {
-    border-style: var(--tw-border-style);
-    border-width: 1px;
-  }
-
   .focus-visible\:border-\[\#2563EB\]:focus-visible {
     border-color: #2563eb;
   }
@@ -4282,6 +4244,22 @@
     translate: var(--tw-translate-x) var(--tw-translate-y);
   }
 
+  :is(.\*\*\:data-\[sidebar\=menu-button\]\:transition-all *)[data-sidebar="menu-button"] {
+    transition-property: all;
+    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+    transition-duration: var(--tw-duration, var(--default-transition-duration));
+  }
+
+  :is(.\*\*\:data-\[sidebar\=menu-button\]\:duration-200 *)[data-sidebar="menu-button"] {
+    --tw-duration: .2s;
+    transition-duration: .2s;
+  }
+
+  :is(.\*\*\:data-\[sidebar\=menu-button\]\:ease-out *)[data-sidebar="menu-button"] {
+    --tw-ease: var(--ease-out);
+    transition-timing-function: var(--ease-out);
+  }
+
   .data-\[size\=default\]\:h-8[data-size="default"] {
     height: calc(var(--spacing) * 8);
   }
@@ -4338,25 +4316,6 @@
 
   :is(.\*\*\:data-\[slot\=badge\]\:px-1 *)[data-slot="badge"] {
     padding-inline: var(--spacing);
-  }
-
-  :is(.\*\:data-\[slot\=card\]\:bg-linear-to-t > *)[data-slot="card"] {
-    --tw-gradient-position: to top;
-  }
-
-  @supports (background-image: linear-gradient(in lab, red, red)) {
-    :is(.\*\:data-\[slot\=card\]\:bg-linear-to-t > *)[data-slot="card"] {
-      --tw-gradient-position: to top in oklab;
-    }
-  }
-
-  :is(.\*\:data-\[slot\=card\]\:bg-linear-to-t > *)[data-slot="card"] {
-    background-image: linear-gradient(var(--tw-gradient-stops));
-  }
-
-  :is(.\*\:data-\[slot\=card\]\:shadow-xs > *)[data-slot="card"] {
-    --tw-shadow: 0 1px 2px 0 var(--tw-shadow-color, #0000000d);
-    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
 
   .data-\[slot\=checkbox-group\]\:gap-3[data-slot="checkbox-group"] {
@@ -4829,20 +4788,12 @@
       height: 600px;
     }
 
-    .md\:w-\[340px\] {
-      width: 340px;
-    }
-
     .md\:grid-cols-2 {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .md\:grid-cols-4 {
       grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-
-    .md\:grid-cols-\[1fr_40px\] {
-      grid-template-columns: 1fr 40px;
     }
 
     .md\:flex-row {
@@ -5110,12 +5061,6 @@
     }
   }
 
-  @container (min-width: 1200px) {
-    .\@\[1200px\]\:grid-cols-\[0\.5fr_1fr\] {
-      grid-template-columns: .5fr 1fr;
-    }
-  }
-
   @container field-group (min-width: 28rem) {
     .\@md\/field-group\:flex-row {
       flex-direction: row;
@@ -5166,14 +5111,6 @@
   }
 
   @media (prefers-color-scheme: dark) {
-    .dark\:bg-transparent {
-      background-color: #0000;
-    }
-
-    .dark\:fill-green-400 {
-      fill: var(--color-green-400);
-    }
-
     .dark\:after\:mix-blend-lighten:after {
       content: var(--tw-content);
       mix-blend-mode: lighten;
@@ -5841,12 +5778,6 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @property --tw-space-x-reverse {
-  syntax: "*";
-  inherits: false;
-  initial-value: 0;
-}
-
-@property --tw-divide-y-reverse {
   syntax: "*";
   inherits: false;
   initial-value: 0;

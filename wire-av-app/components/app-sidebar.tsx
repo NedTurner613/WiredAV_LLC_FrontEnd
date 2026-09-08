@@ -56,13 +56,13 @@ const data = {
       icon: <ChartBarIcon />,
     },
     {
-      title: "Projects",
-      url: "#",
-      icon: <FolderIcon />,
+      title: "Technicians",
+      url: "/admin/dashboard/personnel",
+      icon: <UsersIcon />,
     },
     {
-      title: "Team",
-      url: "admin/dashboard/personnel",
+      title: "Clients",
+      url: "/admin/dashboard/clients",
       icon: <UsersIcon />,
     },
   ],
@@ -157,7 +157,7 @@ export function AppSidebar({
     <Sidebar
       collapsible="offcanvas"
       className={cn(
-        "[&_[data-sidebar=menu-button]]:transition-all [&_[data-sidebar=menu-button]]:duration-200 [&_[data-sidebar=menu-button]]:ease-out [&_[data-sidebar=menu-button]:hover]:translate-x-1 [&_[data-sidebar=menu-button]:hover]:shadow-sm",
+        "**:data-[sidebar=menu-button]:transition-all **:data-[sidebar=menu-button]:duration-200 **:data-[sidebar=menu-button]:ease-out [&_[data-sidebar=menu-button]:hover]:translate-x-1 [&_[data-sidebar=menu-button]:hover]:shadow-sm",
         className,
       )}
       {...props}
