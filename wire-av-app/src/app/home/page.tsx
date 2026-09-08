@@ -349,7 +349,7 @@ export default function LandingPage() {
 
       {/* CTA Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="relative bg-gradient-to-r from-[#2563EB] to-[#24a5eb] rounded-3xl p-12 lg:p-20 overflow-hidden shadow-2xl">
+        <div className="relative bg-linear-to-r from-[#2563EB] to-[#24a5eb] rounded-3xl p-12 lg:p-20 overflow-hidden shadow-2xl">
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-32 -mt-32" />
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/10 rounded-full blur-3xl -ml-32 -mb-32" />
 
