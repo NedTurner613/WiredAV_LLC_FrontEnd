@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Icon } from '@iconify/react';
+import { ConsultationModal } from '@/components/consultation-modal';
 
 export default function AboutPage() {
   return (
@@ -28,9 +29,11 @@ export default function AboutPage() {
           </nav>
 
           <div className="flex items-center gap-4">
-            <button className="hidden sm:flex items-center justify-center px-6 py-2.5 bg-[#2563EB] text-[#F2F7FF] text-sm font-semibold rounded-full shadow-md hover:bg-[#1D4ED8] transition-all">
-              Schedule a Consultation
-            </button>
+            <ConsultationModal>
+              <button className="hidden sm:flex items-center justify-center px-6 py-2.5 bg-[#2563EB] text-[#F2F7FF] text-sm font-semibold rounded-full shadow-md hover:bg-[#1D4ED8] transition-all">
+                Schedule a Consultation
+              </button>
+            </ConsultationModal>
             <button className="md:hidden p-2 text-[#3D4148]">
               <Icon icon="lucide:menu" className="w-6 h-6" />
             </button>
@@ -202,9 +205,11 @@ export default function AboutPage() {
             Whether you&apos;re planning a new build or upgrading an existing space, our experts are ready to bring your vision to life with technical precision and premium flair.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button className="w-full sm:w-auto px-12 py-3 bg-[#2563EB] text-[#F2F7FF] font-bold rounded-full shadow-lg hover:bg-[#1D4ED8] transition-all">
-              Schedule a Consultation
-            </button>
+            <ConsultationModal>
+              <button className="w-full sm:w-auto px-12 py-3 bg-[#2563EB] text-[#F2F7FF] font-bold rounded-full shadow-lg hover:bg-[#1D4ED8] transition-all">
+                Schedule a Consultation
+              </button>
+            </ConsultationModal>
             <button className="w-full sm:w-auto px-12 py-3 border border-[#D1D4D9] text-[#3D4148] font-bold rounded-full hover:bg-black/5 transition-all">
               Contact Us
             </button>

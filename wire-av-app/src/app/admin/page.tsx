@@ -1,21 +1,17 @@
+"use client";
+
 import CalendarPicker from "@/components/CalendarPicker";
 import { AppSidebar } from "@/components/app-sidebar";
-import { DataTable } from "@/components/data-table";
 import { SectionCards } from "@/components/section-cards";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-// import data from "./dashboard/data.json";
 
-// Placeholder for once the authentication has been set up
-// const user = await getServerSession(authOpt);
-// const user = await AuthenticatorAssertionResponse;
-
-async function getCurrentUser(): Promise<User> {
+function getCurrentUser(): User {
   return { name: "Jane", role: "admin" };
 }
 
-export default async function AdminPage(role: Role) {
-  const user = await getCurrentUser();
+export default function AdminPage() {
+  const user = getCurrentUser();
 
   const heading =
     user.role === "admin"

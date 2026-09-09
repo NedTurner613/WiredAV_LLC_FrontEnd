@@ -11,11 +11,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v5
     - name: Use Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v5
       with:
-        node-version: '20'
+        node-version: '22'
+        cache: 'npm'
+        cache-dependency-path: wire-av-app/package-lock.json
     - name: Install dependencies
       working-directory: wire-av-app
       run: npm install

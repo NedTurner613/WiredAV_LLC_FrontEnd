@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { signupAction } from "@/lib/auth-actions";
 
 export function SignupForm({
   className,
@@ -20,47 +21,76 @@ export function SignupForm({
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Register Personnel</CardTitle>
           <CardDescription>
-            Enter the first name, last name, email, and phone number to register
-            the technician.
+            Enter the first name, last name, email, phone number, and password
+            to register the technician.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form action={signupAction}>
             <FieldGroup>
               <Field>
-                <FieldLabel htmlFor="name">First Name</FieldLabel>
-                <Input id="firstName" type="text" placeholder="John" required />
-                <FieldLabel htmlFor="name">Last Name</FieldLabel>
-                <Input id="firstName" type="text" placeholder="Doe" required />
+                <FieldLabel htmlFor="firstName">First Name</FieldLabel>
+                <Input
+                  id="firstName"
+                  name="firstName"
+                  type="text"
+                  placeholder="John"
+                  required
+                />
+              </Field>
+
+              <Field>
+                <FieldLabel htmlFor="lastName">Last Name</FieldLabel>
+                <Input
+                  id="lastName"
+                  name="lastName"
+                  type="text"
+                  placeholder="Doe"
+                  required
+                />
               </Field>
 
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
                 <Input
                   id="email"
+                  name="email"
                   type="email"
                   placeholder="m@example.com"
                   required
                 />
               </Field>
+
               <Field>
-                <Field>
-                  <Field>
-                    <FieldLabel htmlFor="number">Phone Number</FieldLabel>
-                    <Input
-                      id="phoneNumber"
-                      type="number"
-                      placeholder="(123)-456-7890"
-                      required
-                    />
-                  </Field>
-                </Field>
+                <FieldLabel htmlFor="phoneNumber">Phone Number</FieldLabel>
+                <Input
+                  id="phoneNumber"
+                  name="phoneNumber"
+                  type="tel"
+                  placeholder="(123)-456-7890"
+                  required
+                />
               </Field>
+
               <Field>
-                <Button className="relative px-8 py-4 font-bold text-cyan-400 bg-slate-950 rounded-lg overflow-hidden group transition-all duration-300 hover:text-cyan-200 hover:shadow-[0_0_30px_rgba(34,211,238,0.3)]">
+                <FieldLabel htmlFor="password">Password</FieldLabel>
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  placeholder="Create a password"
+                  required
+                />
+              </Field>
+
+              <Field>
+                <Button
+                  type="submit"
+                  className="relative px-8 py-4 font-bold text-cyan-400 bg-slate-950 rounded-lg overflow-hidden group transition-all duration-300 hover:text-cyan-200 hover:shadow-[0_0_30px_rgba(34,211,238,0.3)]"
+                >
                   <svg
                     className="absolute inset-0 w-full h-full pointer-events-none"
-                    xmlns="http://w3.org"
+                    xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
                       d="M 0 10 H 20 L 30 0 H 120 L 130 10 H 200 V 40 L 190 50 H 10 L 0 40 Z"

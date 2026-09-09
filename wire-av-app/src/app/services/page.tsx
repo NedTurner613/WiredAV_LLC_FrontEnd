@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { Icon } from '@iconify/react';
+import { ConsultationModal } from '@/components/consultation-modal';
 
 export default function ServicesPage() {
 const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -27,9 +28,11 @@ const [isMenuOpen, setIsMenuOpen] = useState(false);
           </div>
 
           <div className="hidden lg:block">
-            <button className="bg-[#2563EB] text-white px-6 py-2.5 rounded-full text-sm font-semibold shadow-md hover:bg-[#1D4ED8] transition-all">
-              Schedule a Consultation
-            </button>
+            <ConsultationModal>
+              <button className="bg-[#2563EB] text-white px-6 py-2.5 rounded-full text-sm font-semibold shadow-md hover:bg-[#1D4ED8] transition-all">
+                Schedule a Consultation
+              </button>
+            </ConsultationModal>
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -48,9 +51,11 @@ const [isMenuOpen, setIsMenuOpen] = useState(false);
             <Link href="/about" className="block text-lg font-medium">About</Link>
             <Link href="/services" className="block text-lg font-medium">Services</Link>
             <Link href="/contact" className="block text-lg font-medium">Contact</Link>
-            <button className="w-full bg-[#2563EB] text-white py-3 rounded-full font-semibold">
-              Schedule a Consultation
-            </button>
+            <ConsultationModal>
+              <button className="w-full bg-[#2563EB] text-white py-3 rounded-full font-semibold">
+                Schedule a Consultation
+              </button>
+            </ConsultationModal>
           </div>
         )}
       </nav>
