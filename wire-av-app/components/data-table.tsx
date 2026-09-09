@@ -139,7 +139,7 @@ export const schema = z.object({
   limit: z.string().optional(),
 });
 
-type Client = z.infer<typeof schema>;
+export type Client = z.infer<typeof schema>;
 
 const reviewerOptions = [
   "Maya Johnson",
