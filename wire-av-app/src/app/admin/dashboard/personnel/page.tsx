@@ -1,14 +1,14 @@
 "use client";
 
 import { AppSidebar } from "@/components/app-sidebar";
+import {
+  AddPersonnelModal,
+  type NewPersonnelValues,
+} from "@/components/add-personnel-modal";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { DataTable, type Personnel } from "@/components/data-table";
 import { useApi } from "@/hooks/useApi";
-
-// Placeholder for once the authentication has been set up
-// const user = await getServerSession(authOpt);
-// const user = await AuthenticatorAssertionResponse;
 
 function getCurrentUser(): User {
   return { name: "Jane", role: "admin" };
@@ -16,8 +16,18 @@ function getCurrentUser(): User {
 
 export default function PersonnelPage() {
   const user = getCurrentUser();
-  const { data, loading, error, refetch } =
+
+  // GET api/v1/personnel
+  const { data, loading, error, refetch, post } =
     useApi<Personnel[]>("/api/v1/personnel");
+
+  const handleAddPersonnel = async (newPersonnel: NewPersonnelValues) => {
+    await post<Personnel, NewPersonnelValues>(
+      "/api/v1/personnel",
+      newPersonnel,
+      true,
+    );
+  };
 
   const heading =
     user.role === "admin"
@@ -36,18 +46,31 @@ export default function PersonnelPage() {
       <AppSidebar variant="inset" />
       <SidebarInset>
         <SiteHeader />
-        <div className="flex flex-1 flex-col">
-          <div className="@container/main flex flex-1 flex-col gap-2">
-            <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-              <div className="rounded-2xl border border-slate-200/70 bg-linear-to-br from-slate-50 to-white p-5 shadow-sm">
-                <div className="flex flex-col gap-6">
-                  <h1 className="text-xl font-semibold">{heading}</h1>
-                  <DataTable data={data ?? []} />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <main className="flex flex-1 flex-col gap-6 p-4 md:p-6">
+          <h1 className="text-2xl font-semibold">Personnel List</h1>
+          {loading && !data && (
+            <p className="text-sm text-muted-foreground">Loading...</p>
+          )}
+          {error && (
+            <p className="text-sm text-red-600">
+              {error.message}
+              {!data && (
+                <button
+                  onClick={() => void refetch()}
+                  className="ml-2 underline"
+                >
+                  Retry
+                </button>
+              )}
+            </p>
+          )}
+          {data && (
+            <DataTable
+              data={data}
+              actions={<AddPersonnelModal onAdd={handleAddPersonnel} />}
+            />
+          )}
+        </main>
       </SidebarInset>
     </SidebarProvider>
   );
