@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+
 import { AppSidebar } from "@/components/app-sidebar";
 import {
   AddClientModal,
@@ -12,11 +14,24 @@ import { useApi } from "@/hooks/useApi";
 
 export default function ClientsPage() {
   // GET api/v1/clients
-  const { data, loading, error, refetch, post } = useApi<Client[]>("/api/v1/clients");
+  const { data, loading, error, refetch, post } =
+    useApi<ClientsResponse>("/api/v1/clients");
 
   const handleAddClient = async (newClient: NewClientValues) => {
     await post<Client, NewClientValues>("/api/v1/clients", newClient, true);
   };
+
+  const clients: Client[] = useMemo(
+    () =>
+      (data?.content ?? []).map((client) => ({
+        id: client.clientId,
+        firstName: client.firstName,
+        lastName: client.lastName,
+        email: client.email,
+        phone: client.phoneNumber,
+      })),
+    [data],
+  );
 
   return (
     <SidebarProvider
@@ -50,7 +65,7 @@ export default function ClientsPage() {
           )}
           {data && (
             <DataTable
-              data={data}
+              data={clients}
               actions={<AddClientModal onAdd={handleAddClient} />}
             />
           )}

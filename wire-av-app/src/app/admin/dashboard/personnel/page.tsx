@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { AppSidebar } from "@/components/app-sidebar";
 import {
   AddPersonnelModal,
@@ -19,7 +20,7 @@ export default function PersonnelPage() {
 
   // GET api/v1/personnel
   const { data, loading, error, refetch, post } =
-    useApi<Personnel[]>("/api/v1/personnel");
+    useApi<PersonnelResponse>("/api/v1/personnel");
 
   const handleAddPersonnel = async (newPersonnel: NewPersonnelValues) => {
     await post<Personnel, NewPersonnelValues>(
@@ -28,6 +29,17 @@ export default function PersonnelPage() {
       true,
     );
   };
+
+  const personnel: Personnel[] = useMemo(
+    () =>
+      (data?.personnelList ?? []).map((person) => ({
+        id: person.personnelId,
+        firstName: person.firstName,
+        lastName: person.lastName,
+        email: "",
+      })),
+    [data],
+  );
 
   const heading =
     user.role === "admin"
@@ -66,7 +78,7 @@ export default function PersonnelPage() {
           )}
           {data && (
             <DataTable
-              data={data}
+              data={personnel}
               actions={<AddPersonnelModal onAdd={handleAddPersonnel} />}
             />
           )}
