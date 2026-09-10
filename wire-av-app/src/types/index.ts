@@ -30,7 +30,23 @@ appType: "consultation" | "installation" | "maintenance";
 }
 
 type Timeslot = { 
+    // id: string;
+    startTime: string; // ISO 8601 format
+    endTime: string;   // ISO 8601 format
+}
+
+type TimeslotWithId = { 
     id: string;
     startTime: string; // ISO 8601 format
     endTime: string;   // ISO 8601 format
+}
+
+export type ConsultationRequest = {
+  clientInfo: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phoneNumber: string;
+  };
+  timeslot: Timeslot;
 }

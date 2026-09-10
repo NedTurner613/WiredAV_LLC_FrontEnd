@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/select";
 import { apiClient } from "@/src/app/services/apiClient";
 import { toast } from "sonner";
+import { ConsultationRequest } from "@/src/types";
 
 const SERVICES = [
   "Structured Pre-Wire",
@@ -100,9 +101,9 @@ export function ConsultationModal({ children }: ConsultationModalProps) {
   const [lastName, setLastName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
-  const [service, setService] = useState<string | null>(null);
+  // const [service, setService] = useState<string | null>(null);
   const [date, setDate] = useState<Date | undefined>(undefined);
-  const [timeSlot, setTimeSlot] = useState<string | null>(null);
+  const [timeslot, setTimeSlot] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
 
   const timeSlots = useMemo(() => getTimeSlots(date), [date]);
@@ -112,7 +113,7 @@ export function ConsultationModal({ children }: ConsultationModalProps) {
     setLastName("");
     setPhone("");
     setEmail("");
-    setService(null);
+    // setService(null);
     setDate(undefined);
     setTimeSlot(null);
     setSubmitted(false);
@@ -132,19 +133,17 @@ export function ConsultationModal({ children }: ConsultationModalProps) {
     firstName.trim() &&
     lastName.trim() &&
     email.trim() &&
-    service &&
+    // service &&
     date &&
-    timeSlot;
+    timeslot;
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    apiClient.post("/consultations", {
-      firstName,
-      lastName,
-      phone,
-      email,
-      service,
-      date,
-      timeSlot,
+    apiClient.post<ConsultationRequest>("api/v1/consultations", {
+      clientInfo: { firstName, lastName, email, phoneNumber: phone },
+      timeslot: {
+        startTime: slotToDate(date!, timeslot!).toISOString(),
+        endTime: slotToDate(date!, timeslot!).toISOString(),
+      },
     });
     event.preventDefault();
     if (!canSubmit) return;
@@ -174,8 +173,8 @@ export function ConsultationModal({ children }: ConsultationModalProps) {
               Your consultation request is in.
             </p>
             <p className="mt-2 text-sm text-[#596275]">
-              We&apos;ll confirm {timeSlot} on {date ? format(date, "PPP") : ""}{" "}
-              for {service}.
+              We&apos;ll confirm {timeslot} on {date ? format(date, "PPP") : ""}{" "}
+              {/* for {service}. */}
             </p>
             <button
               type="button"
@@ -237,7 +236,7 @@ export function ConsultationModal({ children }: ConsultationModalProps) {
                 />
               </div>
 
-              <div className="flex flex-col gap-2">
+              {/* <div className="flex flex-col gap-2">
                 <Label htmlFor="consultation-service">Service</Label>
                 <Select
                   value={service}
@@ -259,7 +258,7 @@ export function ConsultationModal({ children }: ConsultationModalProps) {
                     ))}
                   </SelectContent>
                 </Select>
-              </div>
+              </div> */}
 
               <div className="mt-auto hidden rounded-xl border border-[#2563EB]/15 bg-[#2563EB]/5 p-4 text-xs leading-relaxed text-[#596275] md:block">
                 Office hours are Monday–Friday 9:00 AM–6:00 PM and Saturday
@@ -271,7 +270,9 @@ export function ConsultationModal({ children }: ConsultationModalProps) {
               <div>
                 <p className="text-sm font-medium">Choose a date</p>
                 <p className="text-xs text-[#596275]">
-                  {date ? format(date, "EEEE, MMMM d") : "Select a day to see times"}
+                  {date
+                    ? format(date, "EEEE, MMMM d")
+                    : "Select a day to see times"}
                 </p>
               </div>
               <Calendar
@@ -299,7 +300,7 @@ export function ConsultationModal({ children }: ConsultationModalProps) {
                 ) : (
                   <div className="grid max-h-44 grid-cols-2 gap-2 overflow-y-auto sm:grid-cols-3">
                     {timeSlots.map((slot) => {
-                      const isSelected = timeSlot === slot;
+                      const isSelected = timeslot === slot;
                       return (
                         <button
                           key={slot}
