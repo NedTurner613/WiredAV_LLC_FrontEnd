@@ -56,7 +56,11 @@ export function AddClientModal({ onAdd }: AddClientModalProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm">
+        <Button
+          variant="outline"
+          size="sm"
+          className="border-slate-200 bg-white text-slate-700 shadow-sm hover:bg-slate-50 hover:text-slate-900"
+        >
           <PlusIcon />
           <span className="hidden lg:inline">Add New Client</span>
         </Button>

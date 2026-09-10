@@ -9,7 +9,7 @@ const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={cn("font-sans", geist.variable)}>
-      <body>
+      <body suppressHydrationWarning> 
         <main style={{ padding: "2rem" }}>{children}</main>
       </body>
     </html>

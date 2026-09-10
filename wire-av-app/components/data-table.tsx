@@ -220,7 +220,7 @@ function createColumns(
             value: status,
           }))}
         >
-          <SelectTrigger className="w-30" size="sm">
+          <SelectTrigger className="w-30 border-slate-200 bg-white shadow-sm" size="sm">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -253,7 +253,7 @@ function createColumns(
             value: reviewer,
           }))}
         >
-          <SelectTrigger className="w-40" size="sm">
+          <SelectTrigger className="w-40 border-slate-200 bg-white shadow-sm" size="sm">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -309,7 +309,7 @@ function DraggableRow({
       data-state={row.getIsSelected() && "selected"}
       data-dragging={isDragging}
       ref={setNodeRef}
-      className="relative z-0 data-[dragging=true]:z-10 data-[dragging=true]:opacity-80"
+      className="relative z-0 bg-white data-[dragging=true]:z-10 data-[dragging=true]:opacity-80"
       style={{
         transform: CSS.Transform.toString(transform),
         transition: transition,
@@ -369,7 +369,7 @@ export function DataTable({
     useSensor(KeyboardSensor, {}),
   );
   const dataIds = React.useMemo<UniqueIdentifier[]>(
-    () => data?.map(({ id }) => id) || [],
+    () => Array.isArray(data) ? data.map(({ id }) => id) : [],
     [data],
   );
   const table = useTable({
@@ -448,7 +448,13 @@ export function DataTable({
         <div className="flex items-center gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger
-              render={<Button variant="outline" size="sm" />}
+              render={
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="border-slate-200 bg-white text-slate-700 shadow-sm hover:bg-slate-50 hover:text-slate-900"
+                />
+              }
             >
               <Columns3Icon data-icon="inline-start" />
               Columns
@@ -485,7 +491,7 @@ export function DataTable({
         value="outline"
         className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
       >
-        <div className="overflow-hidden rounded-lg border">
+        <div className="overflow-hidden rounded-xl border border-slate-200/80 bg-white shadow-sm">
           <DndContext
             collisionDetection={closestCenter}
             modifiers={[restrictToVerticalAxis]}
@@ -494,9 +500,9 @@ export function DataTable({
             id={sortableId}
           >
             <Table>
-              <TableHeader className="sticky top-0 z-10 bg-muted">
+              <TableHeader className="sticky top-0 z-10 bg-slate-50/90">
                 {table.getHeaderGroups().map((headerGroup) => (
-                  <TableRow key={headerGroup.id}>
+                  <TableRow key={headerGroup.id} className="bg-slate-50/90">
                     {headerGroup.headers.map((header) => {
                       return (
                         <TableHead key={header.id} colSpan={header.colSpan}>

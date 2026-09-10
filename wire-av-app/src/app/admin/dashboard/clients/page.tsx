@@ -10,9 +10,30 @@ import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { useApi } from "@/hooks/useApi";
 
+
 export default function ClientsPage() {
   // GET api/v1/clients
-  const { data, loading, error, refetch, post } = useApi<Client[]>("/api/v1/clients");
+  const { data, loading, error, refetch, post } = useApi<Client[]>(
+    "/api/v1/clients",
+  );
+
+  const rawRows = Array.isArray(data)
+    ? data
+    : Array.isArray((data as any)?.content)
+      ? (data as any).content
+      : Array.isArray((data as any)?.data)
+        ? (data as any).data
+        : [];
+
+  const normalizedRows = rawRows.map((client: any) => ({
+    id: client.clientId ?? client.id ?? 0,
+    firstName: client.firstName ?? "",
+    lastName: client.lastName ?? "",
+    email: client.email ?? "",
+    phone: client.phone ?? client.phoneNumber ?? "",
+    status: client.status ?? "Open",
+    reviewer: client.reviewer ?? "",
+  }));
 
   const handleAddClient = async (newClient: NewClientValues) => {
     await post<Client, NewClientValues>("/api/v1/clients", newClient, true);
@@ -48,12 +69,7 @@ export default function ClientsPage() {
               )}
             </p>
           )}
-          {data && (
-            <DataTable
-              data={data}
-              actions={<AddClientModal onAdd={handleAddClient} />}
-            />
-          )}
+          {!loading && !error && <DataTable data={normalizedRows} actions={<AddClientModal onAdd={handleAddClient}/>} />}
         </main>
       </SidebarInset>
     </SidebarProvider>
