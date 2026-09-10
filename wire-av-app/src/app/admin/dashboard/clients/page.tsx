@@ -10,22 +10,41 @@ import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { useApi } from "@/hooks/useApi";
 
+type ApiClientRow = {
+  clientId?: number;
+  id?: number;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
+  phoneNumber?: string;
+  status?: string;
+  reviewer?: string;
+};
+
+type PaginatedClientsResponse = {
+  content?: ApiClientRow[];
+  data?: ApiClientRow[];
+};
+
+type ClientsApiResponse = ApiClientRow[] | PaginatedClientsResponse | null;
+
 
 export default function ClientsPage() {
   // GET api/v1/clients
-  const { data, loading, error, refetch, post } = useApi<Client[]>(
+  const { data, loading, error, refetch, post } = useApi<ClientsApiResponse>(
     "/api/v1/clients",
   );
 
   const rawRows = Array.isArray(data)
     ? data
-    : Array.isArray((data as any)?.content)
-      ? (data as any).content
-      : Array.isArray((data as any)?.data)
-        ? (data as any).data
+    : Array.isArray(data?.content)
+      ? data.content
+      : Array.isArray(data?.data)
+        ? data.data
         : [];
 
-  const normalizedRows = rawRows.map((client: any) => ({
+  const normalizedRows = rawRows.map((client) => ({
     id: client.clientId ?? client.id ?? 0,
     firstName: client.firstName ?? "",
     lastName: client.lastName ?? "",
