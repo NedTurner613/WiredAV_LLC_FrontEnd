@@ -13,26 +13,26 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "@/components/ui/select";
 import { apiClient } from "@/src/app/services/apiClient";
 import { toast } from "sonner";
 
-const SERVICES = [
-  "Structured Pre-Wire",
-  "Home Cinema & Audio",
-  "Luxury Home Integration",
-  "Small Business Integration",
-  "Commercial & Business Tech",
-  "New Construction Framework",
-  "Smart Home Automation",
-  "Network & Security",
-] as const;
+// const SERVICES = [
+//   "Structured Pre-Wire",
+//   "Home Cinema & Audio",
+//   "Luxury Home Integration",
+//   "Small Business Integration",
+//   "Commercial & Business Tech",
+//   "New Construction Framework",
+//   "Smart Home Automation",
+//   "Network & Security",
+// ] as const;
 
 const WEEKDAY_SLOTS = [
   "9:00 AM",
@@ -81,6 +81,31 @@ function slotToDate(date: Date, slot: string) {
   return result;
 }
 
+/**
+ * The backend TimeslotDTO takes LocalDateTime (no timezone), so the request
+ * must send `yyyy-MM-dd'T'HH:mm:ss` local time. `Date.toISOString()` would
+ * append a `Z` and shift the time by the UTC offset.
+ */
+function toLocalIso(date: Date) {
+  return format(date, "yyyy-MM-dd'T'HH:mm:ss");
+}
+
+/** How long a consultation booking occupies the calendar. */
+const SLOT_DURATION_MINUTES = 30;
+
+const CONSULTATIONS_URL = "/api/v1/consultations";
+
+/** Body sent to POST /api/v1/consultations (RequestConsultRequestDTO). */
+type NewConsultationBody = {
+  clientInfo: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phoneNumber: string;
+  };
+  timeslot: { startTime: string; endTime: string };
+};
+
 function getTimeSlots(date: Date | undefined) {
   if (!date) return [];
   const day = date.getDay();
@@ -104,6 +129,11 @@ export function ConsultationModal({ children }: ConsultationModalProps) {
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [timeSlot, setTimeSlot] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
+  const [confirmation, setConfirmation] = useState<{
+    date: Date;
+    timeSlot: string;
+  } | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const timeSlots = useMemo(() => getTimeSlots(date), [date]);
 
@@ -116,6 +146,8 @@ export function ConsultationModal({ children }: ConsultationModalProps) {
     setDate(undefined);
     setTimeSlot(null);
     setSubmitted(false);
+    setConfirmation(null);
+    setIsSubmitting(false);
   };
 
   const handleOpenChange = (nextOpen: boolean) => {
@@ -132,26 +164,57 @@ export function ConsultationModal({ children }: ConsultationModalProps) {
     firstName.trim() &&
     lastName.trim() &&
     email.trim() &&
-    service &&
+    // service &&
     date &&
     timeSlot;
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    apiClient.post("/consultations", {
-      firstName,
-      lastName,
-      phone,
-      email,
-      service,
-      date,
-      timeSlot,
-    });
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!canSubmit) return;
-    setSubmitted(true);
-    resetForm();
-    handleOpenChange(false);
-    toast.success("Thank you for your request! We will get back to you soon.");
+    if (!canSubmit || !date || !timeSlot || isSubmitting) return;
+
+    setIsSubmitting(true);
+    try {
+      const slotStart = slotToDate(date, timeSlot);
+      const slotEnd = new Date(
+        slotStart.getTime() + SLOT_DURATION_MINUTES * 60_000,
+      );
+
+      // The consultation endpoint saves the visitor as a client and books the
+      // consultation in one call, leaving personnel unassigned for an admin to
+      // fill in later. POST /api/appointments cannot be used here: it resolves
+      // personnelId via findById(null), which throws a 500 when unassigned.
+      await apiClient.post<unknown, NewConsultationBody>(CONSULTATIONS_URL, {
+        clientInfo: {
+          firstName: firstName.trim(),
+          lastName: lastName.trim(),
+          email: email.trim(),
+          phoneNumber: phone.trim(),
+        },
+        timeslot: {
+          startTime: toLocalIso(slotStart),
+          endTime: toLocalIso(slotEnd),
+        },
+      });
+
+      setConfirmation({ date, timeSlot });
+      setSubmitted(true);
+      toast.success("Thank you for your request! We will get back to you soon.");
+    } catch (error) {
+      console.error("Consultation request failed:", error);
+      // The endpoint returns null (surfacing as a 500) when the slot is no
+      // longer available, so point the visitor at another time.
+      const slotTaken =
+        error instanceof Error && error.message.includes("status 500");
+      toast.error(
+        slotTaken
+          ? "We couldn't book that time — it may already be taken. Please choose another slot."
+          : error instanceof Error
+            ? error.message
+            : "We couldn't submit your request. Please try again.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -174,8 +237,9 @@ export function ConsultationModal({ children }: ConsultationModalProps) {
               Your consultation request is in.
             </p>
             <p className="mt-2 text-sm text-[#596275]">
-              We&apos;ll confirm {timeSlot} on {date ? format(date, "PPP") : ""}{" "}
-              for {service}.
+              We&apos;ll confirm {confirmation?.timeSlot} on{" "}
+              {confirmation ? format(confirmation.date, "PPP") : ""}
+              {service ? ` for ${service}` : ""}.
             </p>
             <button
               type="button"
@@ -237,7 +301,7 @@ export function ConsultationModal({ children }: ConsultationModalProps) {
                 />
               </div>
 
-              <div className="flex flex-col gap-2">
+              {/* <div className="flex flex-col gap-2">
                 <Label htmlFor="consultation-service">Service</Label>
                 <Select
                   value={service}
@@ -259,7 +323,7 @@ export function ConsultationModal({ children }: ConsultationModalProps) {
                     ))}
                   </SelectContent>
                 </Select>
-              </div>
+              </div> */}
 
               <div className="mt-auto hidden rounded-xl border border-[#2563EB]/15 bg-[#2563EB]/5 p-4 text-xs leading-relaxed text-[#596275] md:block">
                 Office hours are Monday–Friday 9:00 AM–6:00 PM and Saturday
@@ -271,7 +335,9 @@ export function ConsultationModal({ children }: ConsultationModalProps) {
               <div>
                 <p className="text-sm font-medium">Choose a date</p>
                 <p className="text-xs text-[#596275]">
-                  {date ? format(date, "EEEE, MMMM d") : "Select a day to see times"}
+                  {date
+                    ? format(date, "EEEE, MMMM d")
+                    : "Select a day to see times"}
                 </p>
               </div>
               <Calendar
@@ -330,10 +396,10 @@ export function ConsultationModal({ children }: ConsultationModalProps) {
               </button>
               <button
                 type="submit"
-                disabled={!canSubmit}
+                disabled={!canSubmit || isSubmitting}
                 className="rounded-full bg-[#2563EB] px-6 py-2.5 text-sm font-semibold text-[#F2F7FF] shadow-md transition-all hover:bg-[#1D4ED8] disabled:cursor-not-allowed disabled:opacity-50"
               >
-                Request Consultation
+                {isSubmitting ? "Requesting…" : "Request Consultation"}
               </button>
             </div>
           </form>
