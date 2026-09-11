@@ -10,9 +10,60 @@ import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { useApi } from "@/hooks/useApi";
 
+type ApiClientRow = {
+  clientId?: number;
+  id?: number;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
+  phoneNumber?: string;
+  status?: string;
+  reviewer?: string;
+};
+
+type PaginatedClientsResponse = {
+  content?: ApiClientRow[];
+  data?: ApiClientRow[];
+};
+
+type ClientsApiResponse = ApiClientRow[] | PaginatedClientsResponse | null;
+
+type ApiClientRecord = Partial<Client> & {
+  clientId?: number;
+  phoneNumber?: string;
+};
+
+type ClientsResponse =
+  | ApiClientRecord[]
+  | {
+      content?: ApiClientRecord[];
+      data?: ApiClientRecord[];
+    };
+
 export default function ClientsPage() {
   // GET api/v1/clients
-  const { data, loading, error, refetch, post } = useApi<Client[]>("/api/v1/clients");
+  const { data, loading, error, refetch, post } = useApi<ClientsApiResponse>(
+    "/api/v1/clients",
+  );
+
+  const rawRows = Array.isArray(data)
+    ? data
+    : Array.isArray(data?.content)
+      ? data.content
+      : Array.isArray(data?.data)
+        ? data.data
+        : [];
+
+  const normalizedRows = rawRows.map((client, index): Client => ({
+    id: client.clientId ?? client.id ?? -(index + 1),
+    firstName: client.firstName ?? "",
+    lastName: client.lastName ?? "",
+    email: client.email ?? "",
+    phone: client.phone ?? client.phoneNumber ?? "",
+    status: client.status ?? "Open",
+    reviewer: client.reviewer ?? "",
+  }));
 
   const handleAddClient = async (newClient: NewClientValues) => {
     await post<Client, NewClientValues>("/api/v1/clients", newClient, true);
@@ -48,12 +99,7 @@ export default function ClientsPage() {
               )}
             </p>
           )}
-          {data && (
-            <DataTable
-              data={data}
-              actions={<AddClientModal onAdd={handleAddClient} />}
-            />
-          )}
+          {!loading && !error && <DataTable data={normalizedRows} actions={<AddClientModal onAdd={handleAddClient}/>} />}
         </main>
       </SidebarInset>
     </SidebarProvider>
