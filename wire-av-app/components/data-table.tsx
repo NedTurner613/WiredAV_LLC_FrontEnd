@@ -220,7 +220,10 @@ function createColumns(
             value: status,
           }))}
         >
-          <SelectTrigger className="w-30 border-slate-200 bg-white shadow-sm" size="sm">
+          <SelectTrigger
+            className="w-30 border-slate-200 bg-white shadow-sm"
+            size="sm"
+          >
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -253,7 +256,10 @@ function createColumns(
             value: reviewer,
           }))}
         >
-          <SelectTrigger className="w-40 border-slate-200 bg-white shadow-sm" size="sm">
+          <SelectTrigger
+            className="w-40 border-slate-200 bg-white shadow-sm"
+            size="sm"
+          >
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -369,7 +375,7 @@ export function DataTable({
     useSensor(KeyboardSensor, {}),
   );
   const dataIds = React.useMemo<UniqueIdentifier[]>(
-    () => Array.isArray(data) ? data.map(({ id }) => id) : [],
+    () => (Array.isArray(data) ? data.map(({ id }) => id) : []),
     [data],
   );
   const table = useTable({
@@ -452,7 +458,7 @@ export function DataTable({
                 <Button
                   variant="outline"
                   size="sm"
-                  className="border-slate-200 bg-white text-slate-700 shadow-sm hover:bg-slate-50 hover:text-slate-900"
+                  className="border-slate-200 bg-white text-slate-700 shadow-sm hover:bg-slate-50 hover:text-slate-900 dark:border-slate-200 dark:bg-white dark:text-slate-700 dark:hover:bg-slate-50 dark:hover:text-slate-900"
                 />
               }
             >
