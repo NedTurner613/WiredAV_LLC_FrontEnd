@@ -44,8 +44,8 @@ export default function ClientsPage() {
         ? data.data
         : [];
 
-  const normalizedRows = rawRows.map((client) => ({
-    id: client.clientId ?? client.id ?? 0,
+  const normalizedRows = rawRows.map((client, index): Client => ({
+    id: client.clientId ?? client.id ?? -(index + 1),
     firstName: client.firstName ?? "",
     lastName: client.lastName ?? "",
     email: client.email ?? "",
