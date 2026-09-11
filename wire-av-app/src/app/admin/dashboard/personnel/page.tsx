@@ -22,12 +22,12 @@ type ApiPersonnel = {
   role?: number;
 };
 
-/** GET /api/v1/personnel answers with a `personnelList` wrapper, not an array. */
+/* GET /api/v1/personnel */
 type PersonnelListResponse =
   | ApiPersonnel[]
   | { personnelList?: ApiPersonnel[] };
 
-/** Body sent to POST /api/v1/personnel/register (RegisterTechnicianRequestDTO). */
+/* POST /api/v1/personnel/register */
 type RegisterPersonnelBody = {
   firstName: string;
   lastName: string;
@@ -36,8 +36,8 @@ type RegisterPersonnelBody = {
 };
 
 const PERSONNEL_URL = "/api/v1/personnel";
-/** POST on /api/v1/personnel itself is not allowed (405); register is the
- *  endpoint that creates personnel. */
+
+/** POST on /api/v1/personnel*/
 const REGISTER_PERSONNEL_URL = "/api/v1/personnel/register";
 
 /** Role codes stored on the personnel table: 1 = ADMIN, 2 = TECHNICIAN. */
@@ -62,8 +62,6 @@ function toPersonnelRow(
     id,
     firstName: person.firstName ?? "",
     lastName: person.lastName ?? "",
-    // GET /api/v1/personnel omits the email (GetPersonnelListResponseDTO has
-    // no email field); it comes from GET /api/v1/personnel/{id} instead.
     email: person.email ?? emailById?.get(id) ?? "",
     role: roleName(person.role),
   };
@@ -79,7 +77,6 @@ function toPersonnelRows(
   return rows.map((person, index) => toPersonnelRow(person, index, emailById));
 }
 
-/** Ids of the personnel in a list response, for the detail lookups. */
 function personnelIds(payload: PersonnelListResponse | null): number[] {
   const rows = Array.isArray(payload)
     ? payload
