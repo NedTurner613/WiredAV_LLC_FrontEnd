@@ -29,6 +29,17 @@ type PaginatedClientsResponse = {
 
 type ClientsApiResponse = ApiClientRow[] | PaginatedClientsResponse | null;
 
+type ApiClientRecord = Partial<Client> & {
+  clientId?: number;
+  phoneNumber?: string;
+};
+
+type ClientsResponse =
+  | ApiClientRecord[]
+  | {
+      content?: ApiClientRecord[];
+      data?: ApiClientRecord[];
+    };
 
 export default function ClientsPage() {
   // GET api/v1/clients
