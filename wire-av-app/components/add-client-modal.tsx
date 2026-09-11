@@ -59,13 +59,13 @@ export function AddClientModal({ onAdd }: AddClientModalProps) {
         <Button
           variant="outline"
           size="sm"
-          className="border-slate-200 bg-white text-slate-700 shadow-sm hover:bg-slate-50 hover:text-slate-900"
+          className="border-slate-200 bg-white text-slate-700 opacity-100 shadow-sm hover:bg-slate-50 hover:text-slate-900 aria-expanded:bg-slate-50 aria-expanded:text-slate-900 active:bg-slate-100 dark:border-slate-200 dark:bg-white dark:text-slate-700 dark:hover:bg-slate-50 dark:hover:text-slate-900 dark:aria-expanded:bg-slate-50 dark:aria-expanded:text-slate-900"
         >
           <PlusIcon />
           <span className="hidden lg:inline">Add New Client</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="border-slate-200 bg-white text-slate-900 shadow-xl sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Add New Client</DialogTitle>
           <DialogDescription>
