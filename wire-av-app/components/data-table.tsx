@@ -321,6 +321,81 @@ function createColumns(
           }),
         ]
       : []),
+    columnHelper.accessor("phone", {
+      header: "Phone Number",
+      cell: ({ getValue }) => getValue(),
+      enableHiding: false,
+    }),
+    columnHelper.accessor("status", {
+      header: "Status",
+      cell: ({ row }) => (
+        <Select
+          value={row.original.status}
+          onValueChange={(status) =>
+            updateClient(row.original.id, {
+              status: status as Client["status"],
+              reviewer: row.original.reviewer,
+            })
+          }
+          items={statusOptions.map((status) => ({
+            label: status,
+            value: status,
+          }))}
+        >
+          <SelectTrigger
+            className="w-30 border-slate-200 bg-white shadow-sm"
+            size="sm"
+          >
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              {statusOptions.map((status) => (
+                <SelectItem key={status} value={status}>
+                  {status}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      ),
+    }),
+    columnHelper.accessor("reviewer", {
+      header: "Reviewer",
+      cell: ({ row }) => (
+        <Select
+          value={row.original.reviewer}
+          onValueChange={(reviewer) => {
+            if (reviewer) {
+              updateClient(row.original.id, {
+                reviewer,
+                status: row.original.status,
+              });
+            }
+          }}
+          items={reviewerOptions.map((reviewer) => ({
+            label: reviewer,
+            value: reviewer,
+          }))}
+        >
+          <SelectTrigger
+            className="w-40 border-slate-200 bg-white shadow-sm"
+            size="sm"
+          >
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              {reviewerOptions.map((reviewer) => (
+                <SelectItem key={reviewer} value={reviewer}>
+                  {reviewer}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      ),
+    }),
     columnHelper.display({
       id: "actions",
       cell: () => (
@@ -523,7 +598,7 @@ export function DataTable({
                 <Button
                   variant="outline"
                   size="sm"
-                  className="border-slate-200 bg-white text-slate-700 shadow-sm hover:bg-slate-50 hover:text-slate-900"
+                  className="border-slate-200 bg-white text-slate-700 shadow-sm hover:bg-slate-50 hover:text-slate-900 dark:border-slate-200 dark:bg-white dark:text-slate-700 dark:hover:bg-slate-50 dark:hover:text-slate-900"
                 />
               }
             >
