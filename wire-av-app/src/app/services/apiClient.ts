@@ -27,8 +27,13 @@ async function getAuthHeader(): Promise<Record<string, string>> {
 async function request<T>(
   endpoint: string,
   options: RequestInit = {},
+  withAuth: boolean,
 ): Promise<T> {
-  const authHeaders = await getAuthHeader();
+  let authHeaders = {};
+  if (withAuth) {
+    authHeaders = await getAuthHeader();
+  }
+
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
     ...options,
     headers: {
@@ -43,16 +48,28 @@ async function request<T>(
       `Request failed with status ${response.status}: ${response.statusText}`,
     );
   }
-  return response.json() as Promise<T>;
+
+  // Update endpoints may return an empty body (204, or 200 with no content).
+  // Treat that as a successful call instead of failing while parsing.
+  if (response.status === 204) return undefined as T;
+  const text = await response.text();
+  return (text ? JSON.parse(text) : undefined) as T;
 }
+
+type RequestHeaders<T> = {
+  url: string;
+  body?: T;
+  headers?: HeadersInit;
+  withAuth?: boolean;
+};
 
 /**
  * The API client
  * @returns The API client
  */
 export const apiClient = {
-  get: <T>(url: string, headers?: HeadersInit) =>
-    request<T>(url, { method: "GET", headers }),
+  get: <T>(url: string, headers?: HeadersInit, withAuth?: boolean) =>
+    request<T>(url, { method: "GET", headers }, withAuth ?? true),
 
   /**
    * Make a POST request to the API
@@ -61,12 +78,21 @@ export const apiClient = {
    * @param headers The headers for the request
    * @returns The response from the API
    */
-  post: <T, B = unknown>(url: string, body?: B, headers?: HeadersInit) =>
-    request<T>(url, {
-      method: "POST",
-      body: body ? JSON.stringify(body) : undefined,
-      headers,
-    }),
+  post: <T, B = unknown>(
+    url: string,
+    body?: B,
+    headers?: HeadersInit,
+    withAuth?: boolean,
+  ) =>
+    request<T>(
+      url,
+      {
+        method: "POST",
+        body: body ? JSON.stringify(body) : undefined,
+        headers,
+      },
+      withAuth ?? true,
+    ),
 
   /**
    * Make a PATCH request to the API
@@ -75,12 +101,52 @@ export const apiClient = {
    * @param headers The headers for the request
    * @returns The response from the API
    */
-  patch: <T, B = unknown>(url: string, body?: B, headers?: HeadersInit) =>
-    request<T>(url, {
-      method: "PATCH",
-      body: body ? JSON.stringify(body) : undefined,
-      headers,
-    }),
+  /**
+   * Make a PUT request to the API
+   * @param url The URL to request
+   * @param body The body of the request
+   * @param headers The headers for the request
+   * @returns The response from the API
+   */
+  put: <T, B = unknown>(
+    url: string,
+    body?: B,
+    headers?: HeadersInit,
+    withAuth?: boolean,
+  ) =>
+    request<T>(
+      url,
+      {
+        method: "PUT",
+        body: body ? JSON.stringify(body) : undefined,
+        headers,
+      },
+      withAuth ?? true,
+    ),
+
+  /**
+   * Make a PATCH request to the API
+   * @param url The URL to request
+   * @param body The body of the request
+   * @param headers The headers for the request
+   * @param withAuth Whether to attach the auth header
+   * @returns The response from the API
+   */
+  patch: <T, B = unknown>(
+    url: string,
+    body?: B,
+    headers?: HeadersInit,
+    withAuth?: boolean,
+  ) =>
+    request<T>(
+      url,
+      {
+        method: "PATCH",
+        body: body ? JSON.stringify(body) : undefined,
+        headers,
+      },
+      withAuth ?? true,
+    ),
 
   /**
    * Make a DELETE request to the API
@@ -88,6 +154,6 @@ export const apiClient = {
    * @param headers The headers for the request
    * @returns The response from the API
    */
-  delete: <T>(url: string, headers?: HeadersInit) =>
-    request<T>(url, { method: "DELETE", headers }),
+  delete: <T>(url: string, headers?: HeadersInit, withAuth?: boolean) =>
+    request<T>(url, { method: "DELETE", headers }, withAuth ?? false),
 };

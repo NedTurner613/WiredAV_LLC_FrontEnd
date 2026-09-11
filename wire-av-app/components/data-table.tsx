@@ -107,7 +107,20 @@ export const schema = z.object({
   role: z.enum(["admin", "technician"]).optional(),
   status: z.string().optional(),
   reviewer: z.string().optional(),
+  /** Technician assigned to this client's appointment (clients table only). */
+  personnelId: z.number().nullable().optional(),
 });
+
+export type TechnicianOption = {
+  value: string;
+  label: string;
+};
+
+/** The clients table shows a phone column and an editable status; the
+ *  personnel table shows a role column instead. */
+export type DataTableVariant = "clients" | "personnel";
+
+const UNASSIGNED_VALUE = "unassigned";
 
 export type Client = z.infer<typeof schema>;
 
@@ -148,6 +161,9 @@ function createColumns(
     id: number,
     changes: Pick<Client, "reviewer" | "status">,
   ) => void,
+  technicianOptions?: TechnicianOption[],
+  assignTechnician?: (id: number, personnelId: number | null) => void,
+  variant: DataTableVariant = "clients",
 ) {
   return columnHelper.columns([
     columnHelper.display({
@@ -199,6 +215,112 @@ function createColumns(
       cell: ({ getValue }) => getValue(),
       enableHiding: false,
     }),
+    ...(variant === "clients"
+      ? [
+          columnHelper.accessor("phone", {
+            header: "Phone Number",
+            cell: ({ getValue }) => getValue(),
+            enableHiding: false,
+          }),
+        ]
+      : []),
+    ...(variant === "clients"
+      ? [
+          columnHelper.accessor("status", {
+            header: "Status",
+            cell: ({ row }) => (
+              <Select
+                value={row.original.status}
+                onValueChange={(status) =>
+                  updateClient(row.original.id, {
+                    status: status as Client["status"],
+                    reviewer: row.original.reviewer,
+                  })
+                }
+                items={statusOptions.map((status) => ({
+                  label: status,
+                  value: status,
+                }))}
+              >
+                <SelectTrigger
+                  className="w-30 border-slate-200 bg-white shadow-sm"
+                  size="sm"
+                >
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {statusOptions.map((status) => (
+                      <SelectItem key={status} value={status}>
+                        {status}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            ),
+          }),
+        ]
+      : []),
+    ...(variant === "personnel"
+      ? [
+          columnHelper.accessor("role", {
+            header: "Role",
+            cell: ({ getValue }) => {
+              const role = getValue();
+              return role
+                ? role.charAt(0).toUpperCase() + role.slice(1)
+                : "";
+            },
+            enableHiding: false,
+          }),
+        ]
+      : []),
+
+    ...(assignTechnician && technicianOptions
+      ? [
+          columnHelper.display({
+            id: "technician",
+            header: "Technician",
+            cell: ({ row }: { row: Row<typeof features, Client> }) => {
+              const options: TechnicianOption[] = [
+                { value: UNASSIGNED_VALUE, label: "Unassigned" },
+                ...technicianOptions,
+              ];
+              const current = row.original.personnelId;
+              return (
+                <Select
+                  value={current != null ? String(current) : UNASSIGNED_VALUE}
+                  onValueChange={(value) => {
+                    if (value === null) return;
+                    assignTechnician(
+                      row.original.id,
+                      value === UNASSIGNED_VALUE ? null : Number(value),
+                    );
+                  }}
+                  items={options}
+                >
+                  <SelectTrigger
+                    className="w-44 border-slate-200 bg-white shadow-sm"
+                    size="sm"
+                  >
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {options.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              );
+            },
+          }),
+        ]
+      : []),
     columnHelper.accessor("phone", {
       header: "Phone Number",
       cell: ({ getValue }) => getValue(),
@@ -332,9 +454,15 @@ function DraggableRow({
 export function DataTable({
   data: initialData,
   actions,
+  technicianOptions,
+  onTechnicianChange,
+  variant = "clients",
 }: {
   data: z.infer<typeof schema>[];
   actions?: React.ReactNode;
+  technicianOptions?: TechnicianOption[];
+  onTechnicianChange?: (id: number, personnelId: number | null) => void;
+  variant?: DataTableVariant;
 }) {
   const [data, setData] = React.useState(() => initialData);
   const [syncedData, setSyncedData] = React.useState(() => initialData);
@@ -353,9 +481,21 @@ export function DataTable({
     },
     [],
   );
+  const assignTechnician = React.useCallback(
+    (id: number, personnelId: number | null) => {
+      setData((clients) =>
+        clients.map((client) =>
+          client.id === id ? { ...client, personnelId } : client,
+        ),
+      );
+      onTechnicianChange?.(id, personnelId);
+    },
+    [onTechnicianChange],
+  );
+
   const columns = React.useMemo(
-    () => createColumns(updateClient),
-    [updateClient],
+    () => createColumns(updateClient, technicianOptions, assignTechnician, variant),
+    [updateClient, technicianOptions, assignTechnician, variant],
   );
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
