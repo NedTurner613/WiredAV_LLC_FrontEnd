@@ -43,7 +43,9 @@ export function AddPersonnelModal({ onAdd }: AddPersonnelModalProps) {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
+    // Keep a handle on the form: event.currentTarget is null once we await.
+    const form = event.currentTarget;
+    const formData = new FormData(form);
     const values: NewPersonnelValues = {
       firstName: String(formData.get("firstName") ?? "").trim(),
       lastName: String(formData.get("lastName") ?? "").trim(),
@@ -55,7 +57,7 @@ export function AddPersonnelModal({ onAdd }: AddPersonnelModalProps) {
     try {
       await onAdd(values);
       setRole("technician");
-      event.currentTarget.reset();
+      form.reset();
       setOpen(false);
     } catch {
       setError("Could not add the personnel. Please try again.");
