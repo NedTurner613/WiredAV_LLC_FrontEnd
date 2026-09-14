@@ -14,10 +14,13 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+// Google OAuth disabled for now - auth is handled by the backend.
+// import { Separator } from "@/components/ui/separator";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { loginAction } from "@/lib/auth-actions";
+// import { oauthLoginAction } from "@/lib/auth-actions";
 
 export async function LoginForm({
   className,
@@ -60,6 +63,20 @@ export async function LoginForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {/* Google OAuth disabled for now - auth is handled by the backend.
+          <form action={oauthLoginAction.bind(null, "google")}>
+            <Button type="submit" variant="outline" className="w-full">
+              Continue with Google
+            </Button>
+          </form>
+
+          <div className="flex items-center gap-3 py-6">
+            <Separator className="flex-1" />
+            <span className="text-xs uppercase text-muted-foreground">or</span>
+            <Separator className="flex-1" />
+          </div>
+          */}
+
           <form action={loginAction}>
             <FieldGroup>
               <Field>
@@ -90,7 +107,6 @@ export async function LoginForm({
                   className="relative px-8 py-4 font-bold text-cyan-400 bg-slate-950 rounded-lg overflow-hidden group transition-all duration-300 hover:text-cyan-200 hover:shadow-[0_0_30px_rgba(34,211,238,0.3)]"
                   type="submit"
                 >
-                  Login
                   <svg
                     className="absolute inset-0 w-full h-full pointer-events-none"
                     xmlns="http://www.w3.org/2000/svg"
