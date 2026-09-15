@@ -103,10 +103,10 @@ export const schema = z.object({
   firstName: z.string(),
   lastName: z.string(),
   email: z.email(),
-  phone: z.string().optional(),
-  role: z.enum(["admin", "technician"]).optional(),
-  status: z.string().optional(),
-  reviewer: z.string().optional(),
+  phone: z.string().nullable().optional(),
+  role: z.enum(["admin", "technician"]).nullable().optional(),
+  status: z.string().nullable().optional(),
+  reviewer: z.string().nullable().optional(),
   /** Technician assigned to this client's appointment (clients table only). */
   personnelId: z.number().nullable().optional(),
 });
@@ -224,44 +224,44 @@ function createColumns(
           }),
         ]
       : []),
-    ...(variant === "clients"
-      ? [
-          columnHelper.accessor("status", {
-            header: "Status",
-            cell: ({ row }) => (
-              <Select
-                value={row.original.status}
-                onValueChange={(status) =>
-                  updateClient(row.original.id, {
-                    status: status as Client["status"],
-                    reviewer: row.original.reviewer,
-                  })
-                }
-                items={statusOptions.map((status) => ({
-                  label: status,
-                  value: status,
-                }))}
-              >
-                <SelectTrigger
-                  className="w-30 border-slate-200 bg-white shadow-sm"
-                  size="sm"
-                >
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    {statusOptions.map((status) => (
-                      <SelectItem key={status} value={status}>
-                        {status}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            ),
-          }),
-        ]
-      : []),
+    // ...(variant === "clients"
+    //   ? [
+    //       columnHelper.accessor("status", {
+    //         header: "Status",
+    //         cell: ({ row }) => (
+    //           <Select
+    //             value={row.original.status}
+    //             onValueChange={(status) =>
+    //               updateClient(row.original.id, {
+    //                 status: status as Client["status"],
+    //                 reviewer: row.original.reviewer,
+    //               })
+    //             }
+    //             items={statusOptions.map((status) => ({
+    //               label: status,
+    //               value: status,
+    //             }))}
+    //           >
+    //             <SelectTrigger
+    //               className="w-30 border-slate-200 bg-white shadow-sm"
+    //               size="sm"
+    //             >
+    //               <SelectValue />
+    //             </SelectTrigger>
+    //             <SelectContent>
+    //               <SelectGroup>
+    //                 {statusOptions.map((status) => (
+    //                   <SelectItem key={status} value={status}>
+    //                     {status}
+    //                   </SelectItem>
+    //                 ))}
+    //               </SelectGroup>
+    //             </SelectContent>
+    //           </Select>
+    //         ),
+    //       }),
+    //     ]
+    //   : []),
     ...(variant === "personnel"
       ? [
           columnHelper.accessor("role", {
@@ -277,151 +277,151 @@ function createColumns(
         ]
       : []),
 
-    ...(assignTechnician && technicianOptions
-      ? [
-          columnHelper.display({
-            id: "technician",
-            header: "Technician",
-            cell: ({ row }: { row: Row<typeof features, Client> }) => {
-              const options: TechnicianOption[] = [
-                { value: UNASSIGNED_VALUE, label: "Unassigned" },
-                ...technicianOptions,
-              ];
-              const current = row.original.personnelId;
-              return (
-                <Select
-                  value={current != null ? String(current) : UNASSIGNED_VALUE}
-                  onValueChange={(value) => {
-                    if (value === null) return;
-                    assignTechnician(
-                      row.original.id,
-                      value === UNASSIGNED_VALUE ? null : Number(value),
-                    );
-                  }}
-                  items={options}
-                >
-                  <SelectTrigger
-                    className="w-44 border-slate-200 bg-white shadow-sm"
-                    size="sm"
-                  >
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      {options.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              );
-            },
-          }),
-        ]
-      : []),
-    columnHelper.accessor("phone", {
-      header: "Phone Number",
-      cell: ({ getValue }) => getValue(),
-      enableHiding: false,
-    }),
-    columnHelper.accessor("status", {
-      header: "Status",
-      cell: ({ row }) => (
-        <Select
-          value={row.original.status}
-          onValueChange={(status) =>
-            updateClient(row.original.id, {
-              status: status as Client["status"],
-              reviewer: row.original.reviewer,
-            })
-          }
-          items={statusOptions.map((status) => ({
-            label: status,
-            value: status,
-          }))}
-        >
-          <SelectTrigger
-            className="w-30 border-slate-200 bg-white shadow-sm"
-            size="sm"
-          >
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              {statusOptions.map((status) => (
-                <SelectItem key={status} value={status}>
-                  {status}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-      ),
-    }),
-    columnHelper.accessor("reviewer", {
-      header: "Reviewer",
-      cell: ({ row }) => (
-        <Select
-          value={row.original.reviewer}
-          onValueChange={(reviewer) => {
-            if (reviewer) {
-              updateClient(row.original.id, {
-                reviewer,
-                status: row.original.status,
-              });
-            }
-          }}
-          items={reviewerOptions.map((reviewer) => ({
-            label: reviewer,
-            value: reviewer,
-          }))}
-        >
-          <SelectTrigger
-            className="w-40 border-slate-200 bg-white shadow-sm"
-            size="sm"
-          >
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              {reviewerOptions.map((reviewer) => (
-                <SelectItem key={reviewer} value={reviewer}>
-                  {reviewer}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-      ),
-    }),
-    columnHelper.display({
-      id: "actions",
-      cell: () => (
-        <DropdownMenu>
-          <DropdownMenuTrigger
-            render={
-              <Button
-                variant="ghost"
-                className="flex size-8 text-muted-foreground data-open:bg-muted"
-                size="icon"
-              />
-            }
-          >
-            <EllipsisVerticalIcon />
-            <span className="sr-only">Open menu</span>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-32">
-            <DropdownMenuItem>Edit</DropdownMenuItem>
-            <DropdownMenuItem>Make a copy</DropdownMenuItem>
-            <DropdownMenuItem>Favorite</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      ),
-    }),
+    // ...(assignTechnician && technicianOptions
+    //   ? [
+    //       columnHelper.display({
+    //         id: "technician",
+    //         header: "Technician",
+    //         cell: ({ row }: { row: Row<typeof features, Client> }) => {
+    //           const options: TechnicianOption[] = [
+    //             { value: UNASSIGNED_VALUE, label: "Unassigned" },
+    //             ...technicianOptions,
+    //           ];
+    //           const current = row.original.personnelId;
+    //           return (
+    //             <Select
+    //               value={current != null ? String(current) : UNASSIGNED_VALUE}
+    //               onValueChange={(value) => {
+    //                 if (value === null) return;
+    //                 assignTechnician(
+    //                   row.original.id,
+    //                   value === UNASSIGNED_VALUE ? null : Number(value),
+    //                 );
+    //               }}
+    //               items={options}
+    //             >
+    //               <SelectTrigger
+    //                 className="w-44 border-slate-200 bg-white shadow-sm"
+    //                 size="sm"
+    //               >
+    //                 <SelectValue />
+    //               </SelectTrigger>
+    //               <SelectContent>
+    //                 <SelectGroup>
+    //                   {options.map((option) => (
+    //                     <SelectItem key={option.value} value={option.value}>
+    //                       {option.label}
+    //                     </SelectItem>
+    //                   ))}
+    //                 </SelectGroup>
+    //               </SelectContent>
+    //             </Select>
+    //           );
+    //         },
+    //       }),
+    //     ]
+    //   : []),
+    // columnHelper.accessor("phone", {
+    //   header: "Phone Number",
+    //   cell: ({ getValue }) => getValue(),
+    //   enableHiding: true,
+    // }),
+    // columnHelper.accessor("status", {
+    //   header: "Status",
+    //   cell: ({ row }) => (
+    //     <Select
+    //       value={row.original.status}
+    //       onValueChange={(status) =>
+    //         updateClient(row.original.id, {
+    //           status: status as Client["status"],
+    //           reviewer: row.original.reviewer,
+    //         })
+    //       }
+    //       items={statusOptions.map((status) => ({
+    //         label: status,
+    //         value: status,
+    //       }))}
+    //     >
+    //       <SelectTrigger
+    //         className="w-30 border-slate-200 bg-white shadow-sm"
+    //         size="sm"
+    //       >
+    //         <SelectValue />
+    //       </SelectTrigger>
+    //       <SelectContent>
+    //         <SelectGroup>
+    //           {statusOptions.map((status) => (
+    //             <SelectItem key={status} value={status}>
+    //               {status}
+    //             </SelectItem>
+    //           ))}
+    //         </SelectGroup>
+    //       </SelectContent>
+    //     </Select>
+    //   ),
+    // }),
+    // columnHelper.accessor("reviewer", {
+    //   header: "Reviewer",
+    //   cell: ({ row }) => (
+    //     <Select
+    //       value={row.original.reviewer}
+    //       onValueChange={(reviewer) => {
+    //         if (reviewer) {
+    //           updateClient(row.original.id, {
+    //             reviewer,
+    //             status: row.original.status,
+    //           });
+    //         }
+    //       }}
+    //       items={reviewerOptions.map((reviewer) => ({
+    //         label: reviewer,
+    //         value: reviewer,
+    //       }))}
+    //     >
+    //       <SelectTrigger
+    //         className="w-40 border-slate-200 bg-white shadow-sm"
+    //         size="sm"
+    //       >
+    //         <SelectValue />
+    //       </SelectTrigger>
+    //       <SelectContent>
+    //         <SelectGroup>
+    //           {reviewerOptions.map((reviewer) => (
+    //             <SelectItem key={reviewer} value={reviewer}>
+    //               {reviewer}
+    //             </SelectItem>
+    //           ))}
+    //         </SelectGroup>
+    //       </SelectContent>
+    //     </Select>
+    //   ),
+    // }),
+    // columnHelper.display({
+    //   id: "actions",
+    //   cell: () => (
+    //     <DropdownMenu>
+    //       <DropdownMenuTrigger
+    //         render={
+    //           <Button
+    //             variant="ghost"
+    //             className="flex size-8 text-muted-foreground data-open:bg-muted"
+    //             size="icon"
+    //           />
+    //         }
+    //       >
+    //         <EllipsisVerticalIcon />
+    //         <span className="sr-only">Open menu</span>
+    //       </DropdownMenuTrigger>
+    //       <DropdownMenuContent align="end" className="w-32">
+    //         <DropdownMenuItem>Edit</DropdownMenuItem>
+    //         <DropdownMenuItem>Make a copy</DropdownMenuItem>
+    //         <DropdownMenuItem>Favorite</DropdownMenuItem>
+    //         <DropdownMenuSeparator />
+    //         <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
+    //       </DropdownMenuContent>
+    //     </DropdownMenu>
+    //   ),
+    // }),
   ]);
 }
 function DraggableRow({
