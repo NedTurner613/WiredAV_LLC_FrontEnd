@@ -1,73 +1,25 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Icon } from "@iconify/react";
 import { ConsultationModal } from "@/components/consultation-modal";
+import { ScrollReveal } from "@/components/scroll-reveal";
+import { Navbar } from "@/components/navbar";
 
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#F3F7FE] font-body text-[#0F172A]">
-      {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#F3F7FE]/60 backdrop-blur-md border-b border-[#D2D7E1]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-[#2563EB] rounded-xl flex items-center justify-center">
-              <img
-                src="/assets/IMG_1.svg"
-                alt="Logo"
-                className="w-6 h-6 text-[#F2F7FF]"
-              />
-            </div>
-            <span className="text-xl font-bold font-display">
-              Wired Audio Video
-            </span>
-          </div>
-
-          <div className="hidden md:flex items-center gap-8">
-            <Link
-              href="/"
-              className="text-sm font-medium text-[#0F172A]/80 hover:text-[#2563EB] transition-colors"
-            >
-              Home
-            </Link>
-            <Link
-              href="/about"
-              className="text-sm font-medium text-[#0F172A]/80 hover:text-[#2563EB] transition-colors"
-            >
-              About
-            </Link>
-            <Link
-              href="/services"
-              className="text-sm font-medium text-[#0F172A]/80 hover:text-[#2563EB] transition-colors"
-            >
-              Services
-            </Link>
-            <Link
-              href="/contact"
-              className="text-sm font-medium text-[#0F172A]/80 hover:text-[#2563EB] transition-colors"
-            >
-              Contact
-            </Link>
-          </div>
-
-          <ConsultationModal>
-            <button className="hidden lg:block bg-[#2563EB] text-[#F2F7FF] px-6 py-2.5 rounded-full text-sm font-semibold shadow-md hover:bg-[#1D4ED8] transition-all">
-              Schedule a Consultation
-            </button>
-          </ConsultationModal>
-
-          {/* Mobile Menu Toggle */}
-          <button className="md:hidden p-2">
-            <Icon icon="lucide:menu" className="w-6 h-6" />
-          </button>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* Hero Section */}
-      <section className="relative h-[80vh] lg:h-[765px] flex items-center overflow-hidden mt-20">
+      <section className="relative h-[80vh] lg:h-191.25 flex items-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img
+          <Image
             src="/assets/IMG_2.webp"
             alt="Luxury Living Room"
-            className="w-full h-full object-cover"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-[#000102e6] via-[#00010299] to-transparent" />
         </div>
@@ -129,9 +81,11 @@ export default function LandingPage() {
                 },
               ].map((stat, i) => (
                 <div key={i} className="flex items-center gap-4">
-                  <img
+                  <Image
                     src={stat.icon}
-                    className="w-8 h-8 text-[#2563EB]"
+                    width={32}
+                    height={32}
+                    className="w-8 h-8 object-contain"
                     alt=""
                   />
                   <div>
@@ -151,7 +105,7 @@ export default function LandingPage() {
 
       {/* Services Section */}
       <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
+        <ScrollReveal className="text-center mb-16">
           <h2 className="text-3xl font-semibold font-display">
             Advanced <span className="text-[#2563EB]">AV Solutions</span>
           </h2>
@@ -160,7 +114,7 @@ export default function LandingPage() {
             Tailored technology integration designed for modern lifestyles and
             professional excellence.
           </p>
-        </div>
+        </ScrollReveal>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {[
@@ -183,20 +137,25 @@ export default function LandingPage() {
               desc: "Immersive cinematic experiences at home. From high-fidelity multi-room audio to professional-grade home theater projection and seating.",
             },
           ].map((service, i) => (
-            <div
+            <ScrollReveal
               key={i}
+              delay={i * 120}
               className="bg-[#F3F7FE] rounded-xl shadow-sm border border-[#D2D7E1]/30 overflow-hidden hover:shadow-md transition-shadow flex flex-col"
             >
-              <img
+              <Image
                 src={service.img}
                 alt={service.title}
+                width={800}
+                height={640}
                 className="w-full h-64 object-cover"
               />
               <div className="p-8 flex-1 flex flex-col">
                 <div className="w-12 h-12 bg-[#2563EB]/10 rounded-xl flex items-center justify-center mb-6">
-                  <img
+                  <Image
                     src={service.icon}
-                    className="w-6 h-6 text-[#2563EB]"
+                    width={24}
+                    height={24}
+                    className="w-6 h-6"
                     alt=""
                   />
                 </div>
@@ -206,10 +165,16 @@ export default function LandingPage() {
                 </p>
                 <button className="flex items-center gap-2 text-[#2563EB] font-medium text-sm hover:gap-3 transition-all">
                   Learn More{" "}
-                  <img src="/assets/IMG_9.svg" className="w-4 h-4" alt="" />
+                  <Image
+                    src="/assets/IMG_9.svg"
+                    width={16}
+                    height={16}
+                    className="w-4 h-4"
+                    alt=""
+                  />
                 </button>
               </div>
-            </div>
+            </ScrollReveal>
           ))}
         </div>
       </section>
@@ -217,7 +182,7 @@ export default function LandingPage() {
       {/* Workflow Section */}
       <section className="bg-[#0A1121] py-24 text-[#F3F7FE]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-20">
+          <ScrollReveal className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-20">
             <div>
               <span className="inline-block px-3 py-1 border border-[#2563EB] rounded-full text-[10px] font-semibold text-[#2563EB] uppercase tracking-wider mb-4">
                 How We Work
@@ -230,7 +195,7 @@ export default function LandingPage() {
               We believe that premium technology should be matched by a premium
               experience. Our methodology ensures precision at every milestone.
             </p>
-          </div>
+          </ScrollReveal>
 
           <div className="relative">
             {/* Connector Line */}
@@ -259,7 +224,11 @@ export default function LandingPage() {
                   desc: "Rigorous testing and user training to ensure you're fully empowered with your new system.",
                 },
               ].map((item, i) => (
-                <div key={i} className="text-center lg:text-left">
+                <ScrollReveal
+                  key={i}
+                  delay={i * 120}
+                  className="text-center lg:text-left"
+                >
                   <div className="w-16 h-16 bg-[#F3F7FE] rounded-full border-2 border-[#2563EB] shadow-[0_0_15px_rgba(37,99,235,0.2)] flex items-center justify-center mx-auto lg:mx-0 mb-6">
                     <span className="text-2xl font-black text-[#2563EB]">
                       {item.step}
@@ -271,7 +240,7 @@ export default function LandingPage() {
                   <p className="text-sm text-white/80 leading-relaxed max-w-[250px] mx-auto lg:mx-0">
                     {item.desc}
                   </p>
-                </div>
+                </ScrollReveal>
               ))}
             </div>
           </div>
@@ -281,21 +250,23 @@ export default function LandingPage() {
       {/* Testimonials Section */}
       <section className="py-24 bg-[#F3F7FE]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
+          <ScrollReveal className="text-center mb-16">
             <h2 className="text-3xl font-semibold font-display">
               What Our <span className="text-[#2563EB]">Clients Say</span>
             </h2>
             <div className="flex justify-center gap-1 mt-4">
               {[...Array(5)].map((_, i) => (
-                <img
+                <Image
                   key={i}
                   src="/assets/IMG_14.svg"
-                  className="w-5 h-5 text-[#2563EB]"
                   alt="Star"
+                  width={20}
+                  height={20}
+                  className="w-5 h-5"
                 />
               ))}
             </div>
-          </div>
+          </ScrollReveal>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {[
@@ -314,22 +285,27 @@ export default function LandingPage() {
                 img: "/assets/IMG_17.webp",
               },
             ].map((testimonial, i) => (
-              <div
+              <ScrollReveal
                 key={i}
+                delay={i * 120}
                 className="bg-white p-10 rounded-xl shadow-sm border border-[#D2D7E1]/30 relative"
               >
-                <img
+                <Image
                   src="/assets/IMG_15.svg"
-                  className="w-10 h-10 text-[#2563EB] opacity-40 mb-6"
                   alt="Quote"
+                  width={40}
+                  height={40}
+                  className="w-10 h-10 opacity-40 mb-6"
                 />
                 <p className="text-lg italic text-[#0F172A]/90 leading-relaxed mb-8">
                   “{testimonial.quote}”
                 </p>
                 <div className="flex items-center gap-4">
-                  <img
+                  <Image
                     src={testimonial.img}
                     alt={testimonial.author}
+                    width={48}
+                    height={48}
                     className="w-12 h-12 rounded-full object-cover"
                   />
                   <div>
@@ -341,7 +317,7 @@ export default function LandingPage() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </ScrollReveal>
             ))}
           </div>
         </div>
@@ -349,7 +325,7 @@ export default function LandingPage() {
 
       {/* CTA Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="relative bg-linear-to-r from-[#2563EB] to-[#24a5eb] rounded-3xl p-12 lg:p-20 overflow-hidden shadow-2xl">
+        <ScrollReveal className="relative bg-linear-to-r from-[#2563EB] to-[#24a5eb] rounded-3xl p-12 lg:p-20 overflow-hidden shadow-2xl">
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-32 -mt-32" />
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/10 rounded-full blur-3xl -ml-32 -mb-32" />
 
@@ -367,11 +343,17 @@ export default function LandingPage() {
             <ConsultationModal>
               <button className="bg-[#F3F7FE] text-[#0F172A] px-10 py-5 rounded-full text-lg font-bold flex items-center gap-4 hover:scale-105 transition-transform whitespace-nowrap">
                 Get Started{" "}
-                <img src="/assets/IMG_18.svg" className="w-5 h-5" alt="" />
+                <Image
+                  src="/assets/IMG_18.svg"
+                  alt=""
+                  width={20}
+                  height={20}
+                  className="w-5 h-5"
+                />
               </button>
             </ConsultationModal>
           </div>
-        </div>
+        </ScrollReveal>
       </section>
 
       {/* Partners Section */}
@@ -415,7 +397,13 @@ export default function LandingPage() {
                     href="#"
                     className="text-[#596275] hover:text-[#2563EB] transition-colors"
                   >
-                    <img src={social.path} alt="" className="w-5 h-5" />
+                    <Image
+                      src={social.path}
+                      alt=""
+                      width={20}
+                      height={20}
+                      className="w-5 h-5"
+                    />
                   </a>
                 ))}
               </div>
