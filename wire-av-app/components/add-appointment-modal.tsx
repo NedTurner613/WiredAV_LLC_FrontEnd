@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { format } from "date-fns";
 import { PlusIcon } from "lucide-react";
 
@@ -84,16 +84,11 @@ export function AddAppointmentModal({
     }
   };
 
-  useEffect(() => {
-    if (!open) return;
-    if (personnelId) return;
-    if (personnelOptions.length === 0) return;
-    setPersonnelId(personnelOptions[0].value);
-  }, [open, personnelId, personnelOptions]);
+  const selectedPersonnelId = personnelId || personnelOptions[0]?.value || "";
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!personnelId) return;
+    if (!selectedPersonnelId) return;
 
     const form = event.currentTarget;
     const formData = new FormData(form);
@@ -133,7 +128,7 @@ export function AddAppointmentModal({
           startTime: startIso,
           endTime: endIso,
         },
-        personnelId: Number(personnelId),
+        personnelId: Number(selectedPersonnelId),
         createdAt: null,
       });
       form.reset();
@@ -271,7 +266,7 @@ export function AddAppointmentModal({
               <div className="flex flex-col gap-2">
                 <Label htmlFor="add-appointment-personnel">Technician</Label>
                 <Select
-                  value={personnelId}
+                  value={selectedPersonnelId}
                   onOpenChange={(nextOpen) =>
                     handleSelectOpenChange("personnel", nextOpen)
                   }
