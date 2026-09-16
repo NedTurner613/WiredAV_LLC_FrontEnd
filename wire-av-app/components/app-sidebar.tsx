@@ -29,8 +29,8 @@ import {
 
 const data = {
   user: {
-    name: "shadcn",
-    email: "m@example.com",
+    name: "Wired! Audio, LLC",
+    email: "hello@wiredaudiovideo.com",
     avatar: "/avatars/shadcn.jpg",
   },
   navMain: [
@@ -142,7 +142,7 @@ export function AppSidebar({
               render={<a href="#" />}
             >
               <CommandIcon className="size-5!" />
-              <span className="text-base font-semibold">Acme Inc.</span>
+              <span className="text-base font-semibold">Wired! Audio, LLC</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
