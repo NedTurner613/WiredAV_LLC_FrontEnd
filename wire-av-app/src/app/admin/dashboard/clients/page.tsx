@@ -100,6 +100,7 @@ type PersonnelListResponse =
 const APPOINTMENTS_URL = "/api/appointments/list";
 const APPOINTMENT_UPDATE_URL = "/api/appointments";
 const PERSONNEL_URL = "/api/v1/personnel";
+const ADD_CLIENT_URL = "/api/v1/clients/addClient";
 
 const toLocalIso = (date: Date) => format(date, "yyyy-MM-dd'T'HH:mm:ss");
 
@@ -302,7 +303,16 @@ export default function ClientsPage() {
   });
 
   const handleAddClient = async (newClient: NewClientValues) => {
-    await post<Client, NewClientValues>("/api/v1/clients", newClient, true);
+    await post<Client, { firstName: string; lastName: string; email: string; phoneNumber: string }>(
+      ADD_CLIENT_URL,
+      {
+        firstName: newClient.firstName,
+        lastName: newClient.lastName,
+        email: newClient.email,
+        phoneNumber: newClient.phone,
+      },
+      true,
+    );
   };
 
   return (
