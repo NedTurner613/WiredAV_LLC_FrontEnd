@@ -4,6 +4,10 @@ import { useCallback, useEffect, useState } from "react";
 import { format } from "date-fns";
 
 import { AppSidebar } from "@/components/app-sidebar";
+import {
+  AddAppointmentModal,
+  type NewAppointmentValues,
+} from "@/components/add-appointment-modal";
 import { AppointmentDataTable } from "@/components/appointment-data-table";
 import {
   EditAppointmentModal,
@@ -43,6 +47,27 @@ type AppointmentListResponse = { appointments?: AppointmentApiEntry[] };
 type AppointmentListRequest = {
   personnelIds: number[];
   timeFrame: { startTime: string; endTime: string };
+};
+
+type AppointmentCreateBody = {
+  status: number;
+  appType: number;
+  timeslot: { startTime: string; endTime: string };
+  clientId: number;
+  personnelId: number;
+  createdAt: string | null;
+};
+
+type ClientCreateBody = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+};
+
+type ClientCreateResponse = {
+  clientId?: number;
+  id?: number;
 };
 
 type ClientApiEntry = {
@@ -325,13 +350,68 @@ export default function AppointmentsPage() {
     (appointment: AppointmentRow, personnelId: number | null) => {
       setActionError(null);
       void applyChanges(appointment.apptId, { personnelId }).catch(() => {
-        setActionError(
-          "Could not assign the technician. Please try again.",
-        );
+        setActionError("Could not assign the technician. Please try again.");
         void reloadAppointments().catch(() => undefined);
       });
     },
     [applyChanges, reloadAppointments],
+  );
+
+  const handleAddAppointment = useCallback(
+    async (values: NewAppointmentValues) => {
+      setActionError(null);
+      const clientPayload: ClientCreateBody = {
+        firstName: values.clientInfo.firstName,
+        lastName: values.clientInfo.lastName,
+        email: values.clientInfo.email,
+        phone: values.clientInfo.phoneNumber,
+      };
+
+      const createdClient = await apiClient.post<
+        ClientCreateResponse,
+        ClientCreateBody
+      >("/api/v1/clients", clientPayload, undefined, true);
+      const clientId = createdClient?.clientId ?? createdClient?.id;
+      if (typeof clientId !== "number") {
+        throw new Error("Could not determine the new client id.");
+      }
+
+      const body: AppointmentCreateBody = {
+        status: values.status,
+        appType: values.appType,
+        timeslot: values.timeslot,
+        clientId,
+        personnelId: values.personnelId,
+        createdAt: values.createdAt,
+      };
+
+      try {
+        await apiClient.post<unknown, AppointmentCreateBody>(
+          APPOINTMENT_UPDATE_URL,
+          body,
+          undefined,
+          true,
+        );
+      } catch {
+        // Some backend versions accept create payloads without createdAt.
+        const fallbackBody = {
+          status: body.status,
+          appType: body.appType,
+          timeslot: body.timeslot,
+          clientId: body.clientId,
+          personnelId: body.personnelId,
+        };
+        await apiClient.post<unknown, Omit<AppointmentCreateBody, "createdAt">>(
+          APPOINTMENT_UPDATE_URL,
+          fallbackBody,
+          undefined,
+          true,
+        );
+      }
+
+      await reloadAppointments();
+    },
+    [reloadAppointments],
   );
 
   return (
@@ -366,6 +446,12 @@ export default function AppointmentsPage() {
           {!loading && !error && (
             <AppointmentDataTable
               data={appointments}
+              actions={
+                <AddAppointmentModal
+                  personnelOptions={personnelOptions}
+                  onAdd={handleAddAppointment}
+                />
+              }
               personnelOptions={personnelOptions}
               onEdit={handleEdit}
               onStatusChange={handleStatusChange}

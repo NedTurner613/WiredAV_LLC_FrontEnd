@@ -344,8 +344,8 @@ function createColumns(
           <DropdownMenuTrigger
             render={
               <Button
-                variant="ghost"
-                className="flex size-8 text-muted-foreground data-open:bg-muted"
+                variant="outline"
+                className="flex size-8 border-slate-200 bg-white text-slate-600 shadow-sm hover:bg-slate-50 hover:text-slate-900 data-open:bg-slate-50"
                 size="icon"
               />
             }
@@ -353,8 +353,14 @@ function createColumns(
             <EllipsisVerticalIcon />
             <span className="sr-only">Open menu</span>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-32">
-            <DropdownMenuItem onClick={() => openEditModal(row.original)}>
+          <DropdownMenuContent
+            align="end"
+            className="w-36 border-slate-200 bg-white text-slate-900 shadow-lg"
+          >
+            <DropdownMenuItem
+              className="cursor-pointer focus:bg-slate-50"
+              onClick={() => openEditModal(row.original)}
+            >
               Edit
             </DropdownMenuItem>
             <DropdownMenuSeparator />
@@ -542,7 +548,9 @@ export function AppointmentDataTable({
             <SelectContent>
               <SelectGroup>
                 <SelectItem value="outline">Outline</SelectItem>
-                <SelectItem value="past-performance">Past Performance</SelectItem>
+                <SelectItem value="past-performance">
+                  Past Performance
+                </SelectItem>
                 <SelectItem value="key-personnel">Key Personnel</SelectItem>
                 <SelectItem value="focus-documents">Focus Documents</SelectItem>
               </SelectGroup>
@@ -749,7 +757,10 @@ export function AppointmentDataTable({
         >
           <div className="aspect-video w-full flex-1 rounded-lg border border-dashed"></div>
         </TabsContent>
-        <TabsContent value="key-personnel" className="flex flex-col px-4 lg:px-6">
+        <TabsContent
+          value="key-personnel"
+          className="flex flex-col px-4 lg:px-6"
+        >
           <div className="aspect-video w-full flex-1 rounded-lg border border-dashed"></div>
         </TabsContent>
         <TabsContent

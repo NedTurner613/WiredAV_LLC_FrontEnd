@@ -83,6 +83,7 @@ export type AppointmentSelectOption = {
 };
 
 const NONE = "none";
+const fieldClassName = "border-slate-200 bg-white text-slate-900 shadow-sm";
 
 function toOptions(labels: Record<number, string>): AppointmentSelectOption[] {
   return Object.entries(labels).map(([value, label]) => ({ value, label }));
@@ -119,6 +120,7 @@ type EditAppointmentFormProps = {
   appointment: AppointmentRow;
   clientOptions: AppointmentSelectOption[];
   personnelOptions: AppointmentSelectOption[];
+  onSelectOpenChange: (name: string, nextOpen: boolean) => void;
   isSaving: boolean;
   error: string | null;
   onCancel: () => void;
@@ -129,6 +131,7 @@ function EditAppointmentForm({
   appointment,
   clientOptions,
   personnelOptions,
+  onSelectOpenChange,
   isSaving,
   error,
   onCancel,
@@ -139,7 +142,9 @@ function EditAppointmentForm({
   const end = parseDate(timeslot?.endTime);
 
   const [date, setDate] = useState(start ? format(start, "yyyy-MM-dd") : "");
-  const [startTime, setStartTime] = useState(start ? format(start, "HH:mm") : "");
+  const [startTime, setStartTime] = useState(
+    start ? format(start, "HH:mm") : "",
+  );
   const [endTime, setEndTime] = useState(end ? format(end, "HH:mm") : "");
   const [type, setType] = useState(String(appointment.appTypeValue));
   const [status, setStatus] = useState(String(appointment.statusValue));
@@ -162,7 +167,9 @@ function EditAppointmentForm({
   );
   const clientSelectOptions =
     appointment.clientId != null &&
-    !clientOptions.some((option) => option.value === String(appointment.clientId))
+    !clientOptions.some(
+      (option) => option.value === String(appointment.clientId),
+    )
       ? [
           {
             value: String(appointment.clientId),
@@ -209,15 +216,19 @@ function EditAppointmentForm({
         <Label htmlFor="edit-appointment-client">Client</Label>
         <Select
           value={clientId}
+          onOpenChange={(nextOpen) => onSelectOpenChange("client", nextOpen)}
           onValueChange={(value) => {
             if (value !== null) setClientId(value);
           }}
           items={[{ value: NONE, label: "No client" }, ...clientSelectOptions]}
         >
-          <SelectTrigger id="edit-appointment-client" className="w-full">
+          <SelectTrigger
+            id="edit-appointment-client"
+            className={`w-full ${fieldClassName}`}
+          >
             <SelectValue placeholder="Select a client" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent side="bottom" align="start">
             <SelectGroup>
               <SelectItem value={NONE}>No client</SelectItem>
               {clientSelectOptions.map((option) => (
@@ -234,15 +245,22 @@ function EditAppointmentForm({
         <Label htmlFor="edit-appointment-personnel">Technician</Label>
         <Select
           value={personnelId}
+          onOpenChange={(nextOpen) => onSelectOpenChange("personnel", nextOpen)}
           onValueChange={(value) => {
             if (value !== null) setPersonnelId(value);
           }}
-          items={[{ value: NONE, label: "Unassigned" }, ...personnelSelectOptions]}
+          items={[
+            { value: NONE, label: "Unassigned" },
+            ...personnelSelectOptions,
+          ]}
         >
-          <SelectTrigger id="edit-appointment-personnel" className="w-full">
+          <SelectTrigger
+            id="edit-appointment-personnel"
+            className={`w-full ${fieldClassName}`}
+          >
             <SelectValue placeholder="Select a technician" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent side="bottom" align="start">
             <SelectGroup>
               <SelectItem value={NONE}>Unassigned</SelectItem>
               {personnelSelectOptions.map((option) => (
@@ -262,6 +280,7 @@ function EditAppointmentForm({
           type="date"
           value={date}
           onChange={(event) => setDate(event.target.value)}
+          className={fieldClassName}
         />
       </div>
 
@@ -273,6 +292,7 @@ function EditAppointmentForm({
             type="time"
             value={startTime}
             onChange={(event) => setStartTime(event.target.value)}
+            className={fieldClassName}
           />
         </div>
         <div className="flex flex-col gap-2">
@@ -282,6 +302,7 @@ function EditAppointmentForm({
             type="time"
             value={endTime}
             onChange={(event) => setEndTime(event.target.value)}
+            className={fieldClassName}
           />
         </div>
       </div>
@@ -291,15 +312,19 @@ function EditAppointmentForm({
           <Label htmlFor="edit-appointment-type">Type</Label>
           <Select
             value={type}
+            onOpenChange={(nextOpen) => onSelectOpenChange("type", nextOpen)}
             onValueChange={(value) => {
               if (value !== null) setType(value);
             }}
             items={typeOptions}
           >
-            <SelectTrigger id="edit-appointment-type" className="w-full">
+            <SelectTrigger
+              id="edit-appointment-type"
+              className={`w-full ${fieldClassName}`}
+            >
               <SelectValue placeholder="Select a type" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent side="bottom" align="start">
               <SelectGroup>
                 {typeOptions.map((option) => (
                   <SelectItem key={option.value} value={option.value}>
@@ -314,15 +339,19 @@ function EditAppointmentForm({
           <Label htmlFor="edit-appointment-status">Status</Label>
           <Select
             value={status}
+            onOpenChange={(nextOpen) => onSelectOpenChange("status", nextOpen)}
             onValueChange={(value) => {
               if (value !== null) setStatus(value);
             }}
             items={statusOptions}
           >
-            <SelectTrigger id="edit-appointment-status" className="w-full">
+            <SelectTrigger
+              id="edit-appointment-status"
+              className={`w-full ${fieldClassName}`}
+            >
               <SelectValue placeholder="Select a status" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent side="bottom" align="start">
               <SelectGroup>
                 {statusOptions.map((option) => (
                   <SelectItem key={option.value} value={option.value}>
@@ -373,9 +402,13 @@ export function EditAppointmentModal({
 }: EditAppointmentModalProps) {
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [openSelects, setOpenSelects] = useState<Record<string, boolean>>({});
 
   const handleOpenChange = (nextOpen: boolean) => {
-    if (!nextOpen) setError(null);
+    if (!nextOpen) {
+      setError(null);
+      setOpenSelects({});
+    }
     onOpenChange(nextOpen);
   };
 
@@ -392,9 +425,29 @@ export function EditAppointmentModal({
     }
   };
 
+  const isAnySelectOpen = Object.values(openSelects).some(Boolean);
+
+  const handleSelectOpenChange = (name: string, nextOpen: boolean) => {
+    setOpenSelects((current) => {
+      if (current[name] === nextOpen) return current;
+      return { ...current, [name]: nextOpen };
+    });
+  };
+
+  const handleDialogInteractOutside = (event: Event) => {
+    if (isAnySelectOpen) {
+      event.preventDefault();
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
+      <DialogContent
+        className="max-h-[90vh] overflow-y-auto border-slate-200 bg-white text-slate-900 shadow-xl sm:max-w-lg"
+        onInteractOutside={handleDialogInteractOutside}
+        onPointerDownOutside={handleDialogInteractOutside}
+        onFocusOutside={handleDialogInteractOutside}
+      >
         <DialogHeader>
           <DialogTitle>Edit Appointment</DialogTitle>
           <DialogDescription>
@@ -407,6 +460,7 @@ export function EditAppointmentModal({
             appointment={appointment}
             clientOptions={clientOptions}
             personnelOptions={personnelOptions}
+            onSelectOpenChange={handleSelectOpenChange}
             isSaving={isSaving}
             error={error}
             onCancel={() => handleOpenChange(false)}
