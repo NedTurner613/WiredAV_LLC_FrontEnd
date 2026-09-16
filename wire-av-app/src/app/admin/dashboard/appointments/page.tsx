@@ -62,7 +62,7 @@ type ClientCreateBody = {
   firstName: string;
   lastName: string;
   email: string;
-  phone: string;
+  phoneNumber: string;
 };
 
 type ClientCreateResponse = {
@@ -91,6 +91,7 @@ type PersonnelListResponse =
 const APPOINTMENTS_URL = "/api/appointments/list";
 const APPOINTMENT_UPDATE_URL = "/api/appointments";
 const CLIENTS_URL = "/api/v1/clients?size=200";
+const ADD_CLIENT_URL = "/api/v1/clients/addClient";
 const PERSONNEL_URL = "/api/v1/personnel";
 
 const toLocalIso = (date: Date) => format(date, "yyyy-MM-dd'T'HH:mm:ss");
@@ -364,13 +365,13 @@ export default function AppointmentsPage() {
         firstName: values.clientInfo.firstName,
         lastName: values.clientInfo.lastName,
         email: values.clientInfo.email,
-        phone: values.clientInfo.phoneNumber,
+        phoneNumber: values.clientInfo.phoneNumber,
       };
 
       const createdClient = await apiClient.post<
         ClientCreateResponse,
         ClientCreateBody
-      >("/api/v1/clients", clientPayload, undefined, true);
+      >(ADD_CLIENT_URL, clientPayload, undefined, true);
       const clientId = createdClient?.clientId ?? createdClient?.id;
       if (typeof clientId !== "number") {
         throw new Error("Could not determine the new client id.");

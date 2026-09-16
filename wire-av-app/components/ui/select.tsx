@@ -4,6 +4,7 @@ import * as React from "react";
 import { Select as SelectPrimitive } from "@base-ui/react/select";
 
 import { cn } from "@/lib/utils";
+import { useDialogContentContainer } from "@/components/ui/dialog";
 import { ChevronDownIcon, CheckIcon, ChevronUpIcon } from "lucide-react";
 
 const Select = SelectPrimitive.Root;
@@ -73,6 +74,8 @@ function SelectContent({
   > & {
     portalled?: boolean;
   }) {
+  const dialogContainer = useDialogContentContainer();
+
   const content = (
     <SelectPrimitive.Positioner
       side={side}
@@ -102,7 +105,11 @@ function SelectContent({
     return content;
   }
 
-  return <SelectPrimitive.Portal>{content}</SelectPrimitive.Portal>;
+  return (
+    <SelectPrimitive.Portal container={dialogContainer ?? undefined}>
+      {content}
+    </SelectPrimitive.Portal>
+  );
 }
 
 function SelectLabel({
