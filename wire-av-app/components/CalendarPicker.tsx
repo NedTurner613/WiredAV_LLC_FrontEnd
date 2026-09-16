@@ -18,8 +18,7 @@ const statusChipClasses: Record<number, string> = {
 
 function getStatusChipClass(status: number): string {
   return (
-    statusChipClasses[status] ??
-    "border-slate-200 bg-slate-100 text-slate-500"
+    statusChipClasses[status] ?? "border-slate-200 bg-slate-100 text-slate-500"
   );
 }
 
@@ -72,15 +71,15 @@ export default function CalendarPicker() {
   const { appointments, loading, error, refetch } = useAppointments(date);
 
   return (
-    <div className="grid w-full grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1.4fr)_420px]">
-      <div className="min-w-0 rounded-xl border border-slate-200/70 bg-white p-4 shadow-sm">
+    <div className="grid w-full grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1.4fr)_420px] lg:items-stretch">
+      <div className="flex min-w-0 flex-col rounded-xl border border-slate-200/70 bg-white p-4 shadow-sm lg:min-h-136">
         <h2 className="text-base font-semibold text-slate-900">
           Upcoming Appointments
         </h2>
         <div className="mt-2 inline-flex rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-sm font-medium text-sky-800">
           {date ? format(date, "PPP") : "No date selected"}
         </div>
-        <div className="mt-4 max-h-105 space-y-2 overflow-y-auto pr-1">
+        <div className="mt-4 flex-1 space-y-2 overflow-y-auto pr-1">
           {appointments && appointments.length > 0 ? (
             <ul className="space-y-2">
               {appointments.map((appointment) => (
@@ -114,7 +113,13 @@ export default function CalendarPicker() {
         </div>
       </div>
 
-      <div className="w-full rounded-xl border border-slate-200/70 bg-white p-3 shadow-sm lg:w-105">
+      <div className="flex w-full flex-col rounded-xl border border-slate-200/70 bg-white p-3 shadow-sm lg:min-h-136 lg:w-105">
+        <div className="px-1 pb-3">
+          <h2 className="text-base font-semibold text-slate-900">Calendar</h2>
+          <p className="text-sm text-slate-500">
+            Select a date to filter appointments.
+          </p>
+        </div>
         <Calendar
           mode="single"
           selected={date}

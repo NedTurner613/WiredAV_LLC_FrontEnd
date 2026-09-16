@@ -41,6 +41,14 @@ export function AddPersonnelModal({ onAdd }: AddPersonnelModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const handleOpenChange = (nextOpen: boolean) => {
+    setOpen(nextOpen);
+    if (!nextOpen) {
+      setError(null);
+      setRole("technician");
+    }
+  };
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // Keep a handle on the form: event.currentTarget is null once we await.
@@ -67,14 +75,18 @@ export function AddPersonnelModal({ onAdd }: AddPersonnelModalProps) {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm">
+        <Button
+          variant="outline"
+          size="sm"
+          className="border-slate-200 bg-white text-slate-700 opacity-100 shadow-sm hover:bg-slate-50 hover:text-slate-900 aria-expanded:bg-slate-50 aria-expanded:text-slate-900 active:bg-slate-100 dark:border-slate-200 dark:bg-white dark:text-slate-700 dark:hover:bg-slate-50 dark:hover:text-slate-900 dark:aria-expanded:bg-slate-50 dark:aria-expanded:text-slate-900"
+        >
           <PlusIcon />
           <span className="hidden lg:inline">Add New Personnel</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="border-slate-200 bg-white text-slate-900 shadow-xl sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Add New Personnel</DialogTitle>
           <DialogDescription>
@@ -114,7 +126,10 @@ export function AddPersonnelModal({ onAdd }: AddPersonnelModalProps) {
           </div>
           <div className="flex flex-col gap-2">
             <Label htmlFor="add-personnel-role">Role</Label>
-            <Select value={role} onValueChange={(value) => setRole(value as PersonnelRole)}>
+            <Select
+              value={role}
+              onValueChange={(value) => setRole(value as PersonnelRole)}
+            >
               <SelectTrigger id="add-personnel-role" className="w-full">
                 <SelectValue />
               </SelectTrigger>
@@ -130,7 +145,7 @@ export function AddPersonnelModal({ onAdd }: AddPersonnelModalProps) {
               type="button"
               variant="outline"
               disabled={isSubmitting}
-              onClick={() => setOpen(false)}
+              onClick={() => handleOpenChange(false)}
             >
               Cancel
             </Button>
