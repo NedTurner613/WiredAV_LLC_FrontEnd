@@ -22,8 +22,6 @@ import { Label } from "@/components/ui/label";
 // } from "@/components/ui/select";
 import { apiClient } from "@/src/app/services/apiClient";
 import { toast } from "sonner";
-import { useAppointments } from "@/hooks/useAppointments";
-import { date } from "zod";
 
 // const SERVICES = [
 //   "Structured Pre-Wire",
@@ -117,11 +115,9 @@ function getTimeSlots(date: Date | undefined) {
   return slots.filter((slot) => slotToDate(date, slot) > now);
 }
 
-
 type ConsultationModalProps = {
   children: ReactNode;
 };
-
 
 export function ConsultationModal({ children }: ConsultationModalProps) {
   const [open, setOpen] = useState(false);
@@ -220,15 +216,6 @@ export function ConsultationModal({ children }: ConsultationModalProps) {
       setIsSubmitting(false);
     }
   };
-
-  const { appointments } = useAppointments(date);
-
-  const bookedSlotTimes = useMemo(() => {
-    if (!appointments) return new Set<number>();
-    return new Set(
-      appointments.map((a) => new Date(a.timeslot.startTime).getTime())
-    );
-  }, [appointments]);
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -379,21 +366,15 @@ export function ConsultationModal({ children }: ConsultationModalProps) {
                   <div className="grid max-h-44 grid-cols-2 gap-2 overflow-y-auto sm:grid-cols-3">
                     {timeSlots.map((slot) => {
                       const isSelected = timeSlot === slot;
-                      const isTaken =
-                        !!date &&
-                        bookedSlotTimes.has(slotToDate(date, slot).getTime());
                       return (
                         <button
                           key={slot}
                           type="button"
-                          disabled={isTaken}
                           onClick={() => setTimeSlot(slot)}
                           className={
-                            isTaken
-                              ? "cursor-not-allowed rounded-full border border-[#D2D7E1] bg-[#E5E7EB] px-3 py-2 text-xs font-medium text-[#9CA3AF] opacity-60"
-                              : isSelected
-                                ? "rounded-full bg-[#2563EB] px-3 py-2 text-xs font-semibold text-[#F2F7FF] shadow-sm"
-                                : "rounded-full border border-[#D2D7E1] bg-[#F3F7FE] px-3 py-2 text-xs font-medium text-[#0F172A] transition-colors hover:border-[#2563EB] hover:text-[#2563EB]"
+                            isSelected
+                              ? "rounded-full bg-[#2563EB] px-3 py-2 text-xs font-semibold text-[#F2F7FF] shadow-sm"
+                              : "rounded-full border border-[#D2D7E1] bg-[#F3F7FE] px-3 py-2 text-xs font-medium text-[#0F172A] transition-colors hover:border-[#2563EB] hover:text-[#2563EB]"
                           }
                         >
                           {slot}
