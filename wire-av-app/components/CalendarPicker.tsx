@@ -93,7 +93,7 @@ export default function CalendarPicker() {
             <p className="text-sm text-slate-500">Loading appointments...</p>
           ) : error ? (
             <p className="text-sm text-red-600">
-                  Couldn{`${"'"}`}t load appointments: {error.message}
+              Couldn&apos;t load appointments: {error.message}
               <button
                 onClick={() => void refetch()}
                 className="ml-2 font-medium underline underline-offset-2"
